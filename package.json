@@ -1,0 +1,38 @@
+{
+  "name": "@jsspec/jsspec",
+  "version": "0.0.2",
+  "description": "JSSpec",
+  "main": "index.js",
+  "scripts": {
+    "test": "c8 bin/jsspec -R ../spec/running.spec.js ../spec/options.spec.js"
+  },
+  "bin": "bin/jsspec",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JSSpec/jsspec.git"
+  },
+  "types": "types.d.ts",
+  "keywords": [
+    "spec",
+    "test",
+    "jsspec"
+  ],
+  "dependencies": {
+    "@jsspec/cli-options": "0.0.5",
+    "@jsspec/format": "0.0.8"
+  },
+  "devDependencies": {
+    "c8": "^4.1.5",
+    "chai": "^4.2.0"
+  },
+  "author": "HookyQR",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JSSpec/jsspec/issues"
+  },
+  "homepage": "https://github.com/JSSpec/jsspec#readme",
+  "files": [
+    "bin",
+    "src"
+  ]
+}

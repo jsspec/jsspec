@@ -1,4 +1,6 @@
 # JSSPEC
+[![Travis](https://img.shields.io/travis/jsspec/jsspec/master.svg?logo=travis&style=for-the-badge)](https://travis-ci.org/jsspec/jsspec)
+[![AppVeyor](https://img.shields.io/appveyor/ci/HookyQR/jsspec/master.svg?logo=appveyor&style=for-the-badge)](https://ci.appveyor.com/project/HookyQR/jsspec)
 
 Contextualised spec runner for JavaScript in the flavour of `RSpec` (Ruby Spec runner).
 
@@ -116,7 +118,19 @@ it('is a thing', () => {
   expect(subject).to.be.an.instanceOf(MyClass);
 });
 ```
+## eslint
 
+There is an eslint plugin available:
+
+`npm i eslint-plugin-jsspec`
+
+Add the following to your `.eslintrc.json` file in your spec directory:
+```json
+  "plugins": ["jsspec"],
+  "env": {
+    "jsspec/jsspec": true
+  },
+```
 ## Future work:
 * before and after hooks
 * Glob filename matching

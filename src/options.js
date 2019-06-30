@@ -1,0 +1,36 @@
+const Options = require('@jsspec/cli-options');
+const formatters = require('@jsspec/format');
+
+const jsSpecCLIOptions = {
+  random: { alias: 'R', type: Boolean, required: false, default: true },
+  require: { alias: 'r', type: Array, required: false, default: [] },
+  format: { alias: 'f', type: String, required: false, default: 'documentation' },
+  timeout: { alias: 't', type: Number, required: false, default: 200 },
+  files: { type: Array, required: false, default: [] }
+};
+
+class JSSpecOptions {
+  constructor(args) {
+    this.options = new Options(args, jsSpecCLIOptions, 'files');
+    this.settings = this.options.settings;
+    this.errors = this.options.errors;
+    try {
+      this.reporterClass = formatters[this.options.settings.format] || require(this.options.settings.format);
+    } catch (error) {
+      this.reporterClass = formatters.documentation;
+      this.errors.push(error);
+    }
+
+    this.options.settings.require = this.options.settings.require.filter(
+      requestedModule => {
+        try {
+          require(requestedModule);
+          return true;
+        } catch (error) {
+          this.errors.push(error);
+        }
+      });
+  }
+}
+
+module.exports = JSSpecOptions;

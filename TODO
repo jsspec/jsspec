@@ -1,0 +1,44 @@
+Run:
+  ☐ Executable from command line
+    ✔ Accepts formatter @done(19-06-30 21:10)
+    ☐ Accepts filename(s)
+      ✔ Full path @done(19-06-30 21:11)
+      ☐ With Glob
+    ☐ Accpets pre-require(s)
+    ✔ Accpets random toggle @done(19-06-30 21:10)
+  ✔ Runs random @done(19-06-30 21:11)
+  Runs:
+    ✔ Context @done(19-06-30 21:10)
+    ✔ Describe @done(19-06-30 21:10)
+    ✔ It - standard @done(19-06-30 21:10)
+    ☐ It - shorthand
+    Expect:
+      Lead:
+        ☐ .to
+        ☐ .not
+      ☐ .be `===`
+      ☐ .eq `==`
+      ☐ .match `//`
+      ☐ .include `[].includes`
+      ☐ .have `Object.keys().includes()`
+  Describes:
+    ✔ Context @done(19-06-30 21:09)
+    ✔ Describe @done(19-06-30 21:09)
+    ✔ It - standard @done(19-06-30 21:09)
+    ☐ It - shorthand
+
+set:
+  ✔ Defines for object @done(19-06-30 21:09)
+  ✔ Defines for function @done(19-06-30 21:09)
+  ✔ Defines 'A' function @done(19-06-30 21:09)
+
+subject:
+  ✔ Runs as a set @done(19-06-30 21:09)
+  ✔ Defines 'subject' object @done(19-06-30 21:09)
+
+double:
+  ☐ Wraps a class
+
+instance double:
+  ☐ Wraps an object
+
