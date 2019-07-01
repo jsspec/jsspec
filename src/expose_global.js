@@ -13,8 +13,8 @@ const contextual = {
 
 const execution = {
   it: false,
-  // xit: false,
-  // pend: false,
+  xit: false,
+  pend: false,
   // expect: false,
   // is_expected: false
 };

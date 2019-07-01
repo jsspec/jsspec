@@ -61,8 +61,17 @@ describe('directly assigning to a `set` variable', () => {
 context('running2', function funThing2() {
   describe('nested2', () => {
     xcontext('nested pending context');
+
     it('runs this test', () => {
       expect(() => expect(subject).to.be(1)).to.throw(ReferenceError, /Subject is not defined in this context/);
+    });
+
+    xit('nested pending example (xit)', () => {
+      expect(false).to.be.true;
+    });
+
+    pend('nested pending example (pend)', () => {
+      expect(false).to.be.true;
     });
   });
 });

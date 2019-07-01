@@ -1,6 +1,6 @@
 {
   "name": "@jsspec/jsspec",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "JSSpec",
   "main": "index.js",
   "scripts": {

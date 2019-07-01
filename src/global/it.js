@@ -42,6 +42,8 @@ class Example {
 }
 
 module.exports = {
+  Example,
+
   initialise() {
     this.examples = [];
   },
