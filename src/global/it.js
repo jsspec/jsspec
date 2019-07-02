@@ -2,17 +2,19 @@ class Location {}
 class AssertionError extends Error {}
 
 class Example {
-  constructor(description, options, block, context) {
+  constructor(description, kind, options, block, context) {
     const { timeout } = {timeout: 200, ...context, ...options};
-
     this.timeout = timeout;
 
-    const location = new Location();
-    Error.captureStackTrace(location);
-    this._location = location.stack;
+    this.kind = kind;
     this.description = description;
     this.block = block;
     this.context = context;
+
+    const location = new Location();
+    Error.captureStackTrace(location);
+
+    this._location = location.stack;
   }
 
   get fullDescription() {
@@ -89,9 +91,9 @@ module.exports = {
   global: {
     build(description, optionOrBlock, block) {
       if (block instanceof Function)
-        this.currentContext.addExecutor(new Example(description, optionOrBlock, block, this.currentContext));
+        this.currentContext.addExecutor(new Example(description, 'it', optionOrBlock, block, this.currentContext));
       else if (optionOrBlock instanceof Function)
-        this.currentContext.addExecutor(new Example(description, {}, optionOrBlock, this.currentContext));
+        this.currentContext.addExecutor(new Example(description, 'it', {}, optionOrBlock, this.currentContext));
       else throw TypeError('example must be provided an executable block');
     }
   }

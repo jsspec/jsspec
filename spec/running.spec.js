@@ -2,6 +2,8 @@
 
 const expect = require('chai').expect;
 
+const nonExecutor = () => expect(false).to.be.true;
+
 describe('running', function funThing() {
   set('first', () => 1);
   subject('second', () => 2);
@@ -66,13 +68,8 @@ context('running2', function funThing2() {
       expect(() => expect(subject).to.be(1)).to.throw(ReferenceError, /Subject is not defined in this context/);
     });
 
-    xit('nested pending example (xit)', () => {
-      expect(false).to.be.true;
-    });
-
-    pend('nested pending example (pend)', () => {
-      expect(false).to.be.true;
-    });
+    xit('nested pending example (xit)', nonExecutor);
+    pend('nested pending example (pend)', nonExecutor);
   });
 });
 
@@ -94,7 +91,7 @@ describe('using keys that are not set in the context', () => {
 describe('calling set with a non string', () => {
   try {
     set(Symbol('badness'), 5);
-    it('should not execute this block', () => expect(false).to.be.true);
+    it('should not execute this block', nonExecutor);
   } catch (e) {
     it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
   }
@@ -104,7 +101,7 @@ describe('accessing a `set` value outside of an example', () => {
   set('value', 1);
   try {
     let otherValue = value; // eslint-disable-line no-unused-vars
-    it('should not execute this block', () => expect(false).to.be.true);
+    it('should not execute this block', nonExecutor);
   } catch (e) {
     it('fails', () => expect(e).to.be.an.instanceOf(ReferenceError));
   }
@@ -133,7 +130,7 @@ describe('incorrect nesting', () => {
   context('assigning to a value outside of an example', () => {
     try {
       value = 2;
-      it('should not execute this block', () => expect(false).to.be.true);
+      it('should not execute this block', nonExecutor);
     } catch (e) {
       it('fails', () => expect(e).to.be.an.instanceOf(ReferenceError));
     }
@@ -172,7 +169,7 @@ describe('calling without blocks', () => {
   describe('describe', () => {
     try {
       describe('no block');
-      it('should not execute this block', () => expect(false).to.be.true);
+      it('should not execute this block', nonExecutor);
     } catch (e) {
       it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
     }
@@ -180,7 +177,7 @@ describe('calling without blocks', () => {
   describe('context', () => {
     try {
       context('no block');
-      it('should not execute this block', () => expect(false).to.be.true);
+      it('should not execute this block', nonExecutor);
     } catch (e) {
       it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
     }
@@ -188,7 +185,7 @@ describe('calling without blocks', () => {
   describe('it', () => {
     try {
       it('no block');
-      it('should not execute this block', () => expect(false).to.be.true);
+      it('should not execute this block', nonExecutor);
     } catch (e) {
       it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
     }
