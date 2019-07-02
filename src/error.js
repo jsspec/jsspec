@@ -37,5 +37,3 @@ Error.prepareStackTrace = (error, stack) => {
 
   return [error].concat(result.slice(0, errorDepth)).join('\n    at ');
 };
-
-module.exports = {};

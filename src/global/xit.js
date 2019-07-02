@@ -1,5 +1,5 @@
 'use strict';
-const {Example} = require('./it');
+const Example = require('../example');
 
 module.exports = {
   global(description) {

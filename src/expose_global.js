@@ -31,17 +31,12 @@ const shared = {
   // itBehavesLike: false
 };
 
-const errorProcessing = {
-  error: false
-};
-
 const globals = Object.keys({
   ...lazyEvaluate,
   ...contextual,
   ...execution,
   ...executionHook,
   ...shared,
-  ...errorProcessing
 });
 
 const injector = name => {

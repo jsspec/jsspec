@@ -1,3 +1,6 @@
+// set up stack filtering
+require('./error');
+
 const RunnerManager = require('./runner_manager');
 const Options = require('./options');
 

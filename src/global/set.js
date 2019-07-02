@@ -80,14 +80,13 @@ module.exports = {
       }
 
       let creatorOrValue = this.retrieveCreator(key);
-
-      if (creatorOrValue instanceof Function) {
-        try {
-          return creatorOrValue();
-        } catch (_) {
-          // will throw if it's a constructor
-          void(_);
-        } 
+      if (creatorOrValue instanceof Function &&
+        !( // a class isn't callable
+          creatorOrValue.hasOwnProperty('name') &&
+          creatorOrValue.toString().startsWith('class')
+        )
+      ) {
+        return creatorOrValue();
       }
       return creatorOrValue;
     }
