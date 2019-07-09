@@ -4,7 +4,7 @@ const expect = require('chai').expect;
 
 const nonExecutor = () => expect(false).to.be.true;
 
-describe('Error stack preperation', () => {
+describe('Error stack preparation', () => {
   subject('error', () => { throw Error('hello'); });
 
   context('when not DEBUGging', () => {
