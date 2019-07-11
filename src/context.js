@@ -18,7 +18,7 @@ class Context {
     this.description = description;
     this.contextBlock = contextBlock;
     this.children = [];
-
+    this.failed = false;
     Context.initialisers.map(callOnMe, this);
   }
 
@@ -52,6 +52,7 @@ class Context {
     for (let i = 0; i < this.children.length; i++) {
       currentContext = this.children[order[i]];
       count += await currentContext.run();
+      this.failed = this.failed || currentContext.failed;
     }
     currentContext = this;
     return count;
@@ -65,6 +66,7 @@ class Context {
 
   async run() {
     let count = 0;
+    let failed = false;
     baseContext.emitter.emit('contextStart', this.id, this.constructor.name, this.description);
     if (!this.constructor.name.startsWith('X')) {
       const order = Object.keys(this.examples);
@@ -73,11 +75,12 @@ class Context {
         order.sort(() => Math.random() - 0.5);
       }
       for (let i = 0; i < order.length; i++) {
-        await this.runExample(this.examples[order[i]]);
+        failed = await this.runExample(this.examples[order[i]]) || failed;
       }
       count = await this.runChildren() + order.length;
       if (count) await this.runAfterHooks();
     }
+    this.failed = failed;
     baseContext.emitter.emit('contextEnd', this.id);
     return count;
   }

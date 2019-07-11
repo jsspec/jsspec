@@ -17,8 +17,8 @@ class CLI {
     this.reporter = new options.reporterClass(this.manager);
   }
   async run() {
-    await this.manager.run();
-    process.exit(0);
+    const failed = await this.manager.run();
+    process.exit(failed ? 1 : 0);
   }
 }
 

@@ -14,7 +14,7 @@ describe('failures', () => {
     expect(result).to.match(/example timeout \(200ms\) exceeded/);
 
     // missing file
-    expect(result).to.match(/LOAD ERROR Error: Cannot find module.*not\.a\.file\.js/);
+    expect(result).to.match(/LOAD ERROR (\{ )?Error: Cannot find module.*not\.a\.file\.js/);
 
     // failure in before hook
     expect(result).to.match(/\d+\) hooks fails on the initial call/);

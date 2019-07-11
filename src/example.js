@@ -35,7 +35,7 @@ class Example {
   async run() {
     if (this.timeout > 0)
       return Promise.race([this.block(), this.timer()]).then(() => {});
-    return await this.block();
+    await this.block();
   }
 
   timer() {

@@ -9,7 +9,7 @@ const requireFromCwd = file => {
     try {
       return require(file);
     }catch (error) {
-      if (!error.message.includes(`Cannot find module '${file}'`))  throw error;
+      if (!error.message.includes(`Cannot find module '${file}'`)) throw error;
 
       return require(path.join(process.cwd(), file));
     }
@@ -29,11 +29,12 @@ class Runner {
   async run() {
     try {
       requireFromCwd(this.filename);
-    } catch (error) {
+    }catch (error) {
       this.errors.push(error);
       console.log('LOAD ERROR', error);
     }
     await this.context.runChildren();
+    return this.context.failed;
   }
 }
 

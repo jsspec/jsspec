@@ -38,10 +38,13 @@ module.exports = {
         await example.run();
 
         await this.runAfterEach();
-      } catch (e) { example.failure = e; }
+      } catch (e) { 
+        example.failure = e;
+      }
       this.emitter.emit('exampleEnd', example);
       this.endBlock();
       this.setTreeExecution(false);
+      return !!example.failure;
     }
   },
   global: {
