@@ -1,5 +1,19 @@
 const Options = require('@jsspec/cli-options');
 const formatters = require('@jsspec/format');
+const path = require('path');
+
+const requireFromCwd = file => {
+  if (file.startsWith('.')) return require(path.join(process.cwd(), file));
+  else {
+    try {
+      return require(file);
+    }catch (error) {
+      if (!error.message.includes(`Cannot find module '${file}'`)) throw error;
+
+      return require(path.join(process.cwd(), file));
+    }
+  }
+};
 
 const jsSpecCLIOptions = {
   random: { alias: 'R', type: Boolean, required: false, default: true },
@@ -15,8 +29,8 @@ class JSSpecOptions {
     this.settings = this.options.settings;
     this.errors = this.options.errors;
     try {
-      this.reporterClass = formatters[this.options.settings.format] || require(this.options.settings.format);
-    } catch (error) {
+      this.reporterClass = formatters[this.options.settings.format] || requireFromCwd(this.options.settings.format);
+    }catch (error) {
       this.reporterClass = formatters.documentation;
       this.errors.push(error);
     }
@@ -24,12 +38,13 @@ class JSSpecOptions {
     this.options.settings.require = this.options.settings.require.filter(
       requestedModule => {
         try {
-          require(requestedModule);
+          requireFromCwd(requestedModule);
           return true;
-        } catch (error) {
+        }catch (error) {
           this.errors.push(error);
         }
-      });
+      }
+    );
   }
 }
 

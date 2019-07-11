@@ -6,7 +6,7 @@ Error.prepareStackTrace = (error, stack) => {
   if (error.constructor.name === 'Location') {
     while (os < stack.length) {
       const fileName = stack[os].getFileName() || '';
-      if (!fileName.startsWith(__dirname)) {
+      if (!fileName.startsWith(__dirname) && fileName.length) {
         return {
           fileName,
           line: stack[os].getLineNumber()
@@ -14,10 +14,6 @@ Error.prepareStackTrace = (error, stack) => {
       }
       os++;
     }
-    return {
-      fileName: '',
-      line: -1
-    };
   }
 
   let result = [];

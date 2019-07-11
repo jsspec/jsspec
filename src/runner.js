@@ -1,4 +1,20 @@
+'use strict';
+
 require('./expose_global');
+const path = require('path');
+
+const requireFromCwd = file => {
+  if (file.startsWith('.')) return require(path.join(process.cwd(), file));
+  else {
+    try {
+      return require(file);
+    }catch (error) {
+      if (!error.message.includes(`Cannot find module '${file}'`))  throw error;
+
+      return require(path.join(process.cwd(), file));
+    }
+  }
+};
 
 class Runner {
   constructor(runnerManager, filename, context) {
@@ -12,7 +28,7 @@ class Runner {
 
   async run() {
     try {
-      require(this.filename);
+      requireFromCwd(this.filename);
     } catch (error) {
       this.errors.push(error);
       console.log('LOAD ERROR', error);

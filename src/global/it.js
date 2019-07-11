@@ -6,7 +6,7 @@ module.exports = {
   },
   instance: {
     addExecutor(example) {
-      if (this.executing) { throw ReferenceError('An example block can not be defined inside another'); }
+      if (this.executing) { throw ReferenceError('An example block (`it`) can not be defined inside another'); }
 
       const prev = this.examples[this.examples.length - 1];
       this.examples.push(example);
@@ -31,12 +31,13 @@ module.exports = {
     runExample: async function(example) {
       this.setTreeExecution(true);
       try {
-        this.runBeforeEach();
-        this.emitter.emit('exampleStart', example);
+        this.emitter.emit('exampleStart', example, this.executing);
+        await this.runBeforeHooks();
+        await this.runBeforeEach();
 
         await example.run();
 
-        this.runAfterEach();
+        await this.runAfterEach();
       } catch (e) { example.failure = e; }
       this.emitter.emit('exampleEnd', example);
       this.endBlock();
@@ -49,7 +50,7 @@ module.exports = {
         this.currentContext.addExecutor(new Example(description, 'it', optionOrBlock, block, this.currentContext));
       else if (optionOrBlock instanceof Function)
         this.currentContext.addExecutor(new Example(description, 'it', {}, optionOrBlock, this.currentContext));
-      else throw TypeError('example must be provided an executable block');
+      else throw TypeError('`it` must be provided an executable block');
     }
   }
 };

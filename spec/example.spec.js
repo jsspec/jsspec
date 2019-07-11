@@ -1,7 +1,5 @@
 'use strict';
 
-const expect = require('chai').expect;
-
 const Example = require('../src/example');
 
 describe('Example', () => {
@@ -23,7 +21,7 @@ describe('Example', () => {
     subject(() => example.location);
 
     it('has the file and line of the instantiation', () => {
-      expect(subject).to.eql(`${__filename}:8`);
+      expect(subject).to.eql(`${__filename}:6`);
     });
 
     context('when indexed', () => {

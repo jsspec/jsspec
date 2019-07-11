@@ -1,8 +1,6 @@
 'use strict';
 
-const expect = require('chai').expect;
-
-const nonExecutor = () => expect(false).to.be.true;
+const nonExecutor = require('./spec_helper').nonExecutor;
 
 describe('running', function funThing() {
   set('first', () => 1);
@@ -34,16 +32,15 @@ describe('running', function funThing() {
     });
 
     [1, 2].forEach(nr => {
-      it(`runs test in nested iterators (${nr})`, () => {
-        expect([1, 2]).to.include.members([nr]);
-      });
+      it(`runs test in nested iterators (${nr})`, () =>
+        expect([1, 2]).to.include.members([nr])
+      );
     });
   });
 });
 
 xcontext('pending context');
 xdescribe('pending describe');
-
 
 describe('directly assigning to a `set` variable', () => {
   set('target', 1);
@@ -64,9 +61,9 @@ context('running2', function funThing2() {
   describe('nested2', () => {
     xcontext('nested pending context');
 
-    it('runs this test', () => {
-      expect(() => expect(subject).to.be(1)).to.throw(ReferenceError, /Subject is not defined in this context/);
-    });
+    it('runs this test', () =>
+      expect(() => expect(subject).to.be(1)).to.throw(ReferenceError, /Subject is not defined in this context/)
+    );
 
     xit('nested pending example (xit)', nonExecutor);
     pend('nested pending example (pend)', nonExecutor);
@@ -76,15 +73,15 @@ context('running2', function funThing2() {
 describe('using keys that are not set in the context', () => {
   context('set here', () => {
     set('isSet', () => 1);
-    it('works', () => {
-      expect(() => isSet).not.to.throw();
-    });
+    it('works', () =>
+      expect(() => isSet).not.to.throw()
+    );
   });
 
   context('not set here', () => {
-    it('fails', () => {
-      expect(() => isSet).to.throw(ReferenceError, '`isSet` is not set in this context');
-    });
+    it('fails', () =>
+      expect(() => isSet).to.throw(ReferenceError, '`isSet` is not set in this context')
+    );
   });
 });
 
@@ -92,7 +89,7 @@ describe('calling set with a non string', () => {
   try {
     set(Symbol('badness'), 5);
     it('should not execute this block', nonExecutor);
-  } catch (e) {
+  }catch (e) {
     it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
   }
 });
@@ -102,7 +99,7 @@ describe('accessing a `set` value outside of an example', () => {
   try {
     let otherValue = value; // eslint-disable-line no-unused-vars
     it('should not execute this block', nonExecutor);
-  } catch (e) {
+  }catch (e) {
     it('fails', () => expect(e).to.be.an.instanceOf(ReferenceError));
   }
 });
@@ -110,14 +107,15 @@ describe('accessing a `set` value outside of an example', () => {
 describe('setting a class', () => {
   class Test {}
   set('testClass', Test);
-  it('returns the constructor', () => {
-    expect(new testClass()).to.be.an.instanceOf(Test);
-  });
+  it('returns the constructor', () =>
+    expect(new testClass()).to.be.an.instanceOf(Test)
+  );
 });
 
 describe('_coverage_', { timeout: 0 }, () => {
   describe('accessing an already computed value', () => {
     set('value', () => 7);
+
     it('retrieves the already computed value', () => {
       expect(value).to.eql(7);
       expect(value * 2).to.eql(14);
@@ -127,11 +125,11 @@ describe('_coverage_', { timeout: 0 }, () => {
 
 describe('incorrect nesting', () => {
   set('value', 1);
-  context('assigning to a value outside of an example', () => {
+  context('assigning to a value outside of an example', {timeout: 200}, () => {
     try {
       value = 2;
       it('should not execute this block', nonExecutor);
-    } catch (e) {
+    }catch (e) {
       it('fails', () => expect(e).to.be.an.instanceOf(ReferenceError));
     }
 
@@ -143,25 +141,25 @@ describe('incorrect nesting', () => {
   });
 
   it('calling set within an example is not allowed', () => {
-    expect(() => {
-      set('newThing', 0);
-    }).to.throw(ReferenceError, 'Setting lazy evaluators within a running context is not permitted');
+    expect(() =>
+      set('newThing', 0)
+    ).to.throw(ReferenceError, 'Setting lazy evaluators within a running context is not permitted');
   });
 
   it('nesting "it" blocks is not allowed', () => {
-    expect(() => {
-      it('this is not good', () => {});
-    }).to.throw(ReferenceError, 'example block can not be defined inside another');
+    expect(() =>
+      it('this is not good', nonExecutor)
+    ).to.throw(ReferenceError, 'example block (`it`) can not be defined inside another');
   });
 
   it('contexts in "it" blocks are not allowed', () => {
-    expect(() => {
-      context('this is not good', () => {});
-    }).to.throw(ReferenceError, 'A context block can not be defined inside an example');
+    expect(() => 
+      context('this is not good', nonExecutor)
+    ).to.throw(ReferenceError, 'A context block can not be defined inside an example');
   });
-  const wrap = () => it('finds a wrapped function', () => {
-    expect(1).to.eql(1);
-  });
+  const wrap = () => it('finds a wrapped function', () =>
+    expect(1).to.eql(1)
+  );
   wrap();
 });
 
@@ -170,7 +168,7 @@ describe('calling without blocks', () => {
     try {
       describe('no block');
       it('should not execute this block', nonExecutor);
-    } catch (e) {
+    }catch (e) {
       it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
     }
   });
@@ -178,7 +176,7 @@ describe('calling without blocks', () => {
     try {
       context('no block');
       it('should not execute this block', nonExecutor);
-    } catch (e) {
+    }catch (e) {
       it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
     }
   });
@@ -186,7 +184,7 @@ describe('calling without blocks', () => {
     try {
       it('no block');
       it('should not execute this block', nonExecutor);
-    } catch (e) {
+    }catch (e) {
       it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
     }
   });

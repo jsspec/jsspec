@@ -34,10 +34,10 @@ class Context {
     return index;
   }
 
-  close() {
-    this.children.forEach(child => child.close());
-    this.children = [];
-  }
+  // close() {
+  //   this.children.forEach(child => child.close());
+  //   this.children = [];
+  // }
 
   addChild(child) {
     child.id = this.id + ':' + this.children.push(child);
@@ -48,12 +48,13 @@ class Context {
     if (this.random) {
       order.sort(() => Math.random() - 0.5);
     }
-
+    let count = 0;
     for (let i = 0; i < this.children.length; i++) {
       currentContext = this.children[order[i]];
-      await currentContext.run();
+      count += await currentContext.run();
     }
     currentContext = this;
+    return count;
   }
 
   prepare() {
@@ -63,6 +64,7 @@ class Context {
   }
 
   async run() {
+    let count = 0;
     baseContext.emitter.emit('contextStart', this.id, this.constructor.name, this.description);
     if (!this.constructor.name.startsWith('X')) {
       const order = Object.keys(this.examples);
@@ -70,15 +72,16 @@ class Context {
       if (this.random) {
         order.sort(() => Math.random() - 0.5);
       }
-      this.runBeforeHooks();
       for (let i = 0; i < order.length; i++) {
         await this.runExample(this.examples[order[i]]);
       }
-      this.runAfterHooks();
-      await this.runChildren();
+      count = await this.runChildren() + order.length;
+      if (count) await this.runAfterHooks();
     }
     baseContext.emitter.emit('contextEnd', this.id);
+    return count;
   }
+
   get emitter() {
     return baseContext._emitter;
   }
@@ -86,9 +89,9 @@ class Context {
   set emitter(emitter) {
     this._emitter = emitter;
   }
+
   runBeforeEach() {}
   runAfterEach() {}
-  runBeforeHooks() {}
   runAfterHooks() {}
 
   static begin(emitter, file, options) {

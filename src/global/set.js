@@ -5,7 +5,7 @@ let computedValues = new Map();
 let globalisedKeys = new Set();
 
 const globaliseKey = (key) => {
-  if (globalisedKeys.has(key) || global.hasOwnProperty(key)) return;
+  if (globalisedKeys.has(key) || (key in global)) return;
 
   globalisedKeys.add(key);
   if (!key) return;

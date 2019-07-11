@@ -22,7 +22,7 @@ const execution = {
 const executionHook = {
   // beforeEach: false,
   // afterEach: false,
-  // before: false,
+  before: false,
   // after: false
 };
 
