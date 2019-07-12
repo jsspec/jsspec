@@ -95,7 +95,6 @@ class Context {
 
   runBeforeEach() {}
   runAfterEach() {}
-  runAfterHooks() {}
 
   static begin(emitter, file, options) {
     baseContext = currentContext = new Context('', options);

@@ -8,7 +8,7 @@ describe('timeout', {timeout: 200}, () => {
   });
 });
 
-describe('hooks', () => {
+describe('before hook', () => {
   before(() => expect(1).to.eql(2));
 
   it('fails on the initial call', () => {});
@@ -16,6 +16,12 @@ describe('hooks', () => {
   context('at depth', () => {
     it('fails further calls', () => {});
   });
+});
+
+describe('after hook', () => {
+  after('fails with it\'s own report', () => expect(1).to.eql(2));
+
+  it('block for after test', () => {});
 });
 
 describe('Error preparation', () => {

@@ -31,7 +31,7 @@ module.exports = {
     runExample: async function(example) {
       this.setTreeExecution(true);
       try {
-        this.emitter.emit('exampleStart', example, this.executing);
+        this.emitter.emit('exampleStart', example);
         await this.runBeforeHooks();
         await this.runBeforeEach();
 

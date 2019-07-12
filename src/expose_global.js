@@ -23,7 +23,7 @@ const executionHook = {
   // beforeEach: false,
   // afterEach: false,
   before: false,
-  // after: false
+  after: false
 };
 
 const shared = {

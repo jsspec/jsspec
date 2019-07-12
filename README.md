@@ -19,14 +19,21 @@ Add the following to your `.eslintrc.json` file in your spec directory:
     "jsspec/jsspec": true
   },
 ```
+
 ## Future work:
-* after hooks
+Block runners:
 * beforeEach and afterEach hooks
+* sharedExamples
+* sharedContexts
+
+Runner:
+* improved output for file level failures
 * Glob filename matching
 * Targeted test running
 * Concurrent runners
 * File watch running
+
+Associated modules:
 * companion expectation framework
 * doubles (mocks/spies)
 * more formatters
-* improved output for file level failures

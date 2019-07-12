@@ -10,6 +10,12 @@ Run:
   Runs:
     ✔ Context @done(19-06-30 21:10)
     ✔ Describe @done(19-06-30 21:10)
+    ✔ Before Hooks @done(19-07-12 22:19)
+    ✔ After Hooks @done(19-07-12 22:19)
+    ☐ AfterEach
+    ☐ BeforeEach
+    ☐ SharedContext
+    ☐ SharedExample
     ✔ It - standard @done(19-06-30 21:10)
     ☐ It - shorthand
     Expect:
