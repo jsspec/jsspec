@@ -34,7 +34,7 @@ module.exports = {
   },
   global: {
     build(description, optionOrBlock, block) {
-      let expandedDescription = description ? `In after hook: ${description.toString()}` : 'In after hook';
+      let expandedDescription = optionOrBlock ? `In after hook: ${description.toString()}` : 'In after hook';
 
       if (block instanceof Function)
         this.currentContext.addAfterHook(new Example(expandedDescription, 'after', optionOrBlock, block, this.currentContext));

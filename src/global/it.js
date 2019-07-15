@@ -44,8 +44,7 @@ module.exports = {
       this.emitter.emit('exampleEnd', example);
       this.endBlock();
       this.setTreeExecution(false);
-      return !!example.failure;
-    }
+      return !!example.failure;}
   },
   global: {
     build(description, optionOrBlock, block) {

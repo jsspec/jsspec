@@ -34,8 +34,7 @@ class Runner {
       console.log('LOAD ERROR', error);
     }
     await this.context.runChildren();
-    return this.context.failed;
-  }
+    return this.context.failed;}
 }
 
 module.exports = Runner;

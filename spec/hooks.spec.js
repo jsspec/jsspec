@@ -115,7 +115,6 @@ describe('after', () => {
 
   describe('nested execution', () => {
     after('order is maintained', () => expect(ping(10)).to.eql(12));
-    after(() => ping(0, true));
 
     context('one deep', () => {
       it('block for after hook test', () => {});

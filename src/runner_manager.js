@@ -19,8 +19,7 @@ class RunnerManager extends EventEmitter {
       failed = await this.runFile(fileList[i]) || failed;
     }
     this.emit('runEnd');
-    return failed;
-  }
+    return failed;}
 
   async runFile(filename) {
     this.emit('fileStart', filename);
@@ -29,8 +28,7 @@ class RunnerManager extends EventEmitter {
     const failed = await runner.run();
     context.reset();
     this.emit('fileEnd', filename);
-    return failed;
-  }
+    return failed;}
 }
 
 module.exports = RunnerManager;

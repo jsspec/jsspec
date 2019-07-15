@@ -55,8 +55,7 @@ class Context {
       this.failed = this.failed || currentContext.failed;
     }
     currentContext = this;
-    return count;
-  }
+    return count;}
 
   prepare() {
     currentContext = this;
@@ -82,8 +81,7 @@ class Context {
     }
     this.failed = failed;
     baseContext.emitter.emit('contextEnd', this.id);
-    return count;
-  }
+    return count;}
 
   get emitter() {
     return baseContext._emitter;

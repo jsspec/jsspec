@@ -4,7 +4,7 @@
   "description": "JSSpec - contextualised test runner for javascript",
   "main": "index.js",
   "scripts": {
-    "test": "c8 --clean -- bin/jsspec -r chai/register-expect -R spec/running.spec.js spec/options.spec.js spec/example.spec.js spec/error.spec.js spec/hooks.spec.js spec/failure.spec.js"
+    "test": "c8 --clean -- bin/jsspec -r chai/register-expect -R spec/running.spec.js spec/options.spec.js spec/example.spec.js spec/error.spec.js spec/hooks.spec.js spec/each.spec.js spec/failure.spec.js"
   },
   "bin": "bin/jsspec",
   "repository": {
