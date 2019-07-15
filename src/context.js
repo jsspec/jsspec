@@ -93,9 +93,6 @@ class Context {
     this._emitter = emitter;
   }
 
-  runBeforeEach() {}
-  runAfterEach() {}
-
   static begin(emitter, file, options) {
     baseContext = currentContext = new Context('', options);
     baseContext.id = file;

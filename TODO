@@ -4,7 +4,7 @@ Run:
     ☐ Accepts filename(s)
       ✔ Full path @done(19-06-30 21:11)
       ☐ With Glob
-    ☐ Accpets pre-require(s)
+    ✔ Accpets pre-require(s) @done(19-07-15 17:35)
     ✔ Accpets random toggle @done(19-06-30 21:10)
   ✔ Runs random @done(19-06-30 21:11)
   Runs:
@@ -12,8 +12,8 @@ Run:
     ✔ Describe @done(19-06-30 21:10)
     ✔ Before Hooks @done(19-07-12 22:19)
     ✔ After Hooks @done(19-07-12 22:19)
-    ☐ AfterEach
-    ☐ BeforeEach
+    ✔ AfterEach @done(19-07-15 17:35)
+    ✔ BeforeEach @done(19-07-15 17:35)
     ☐ SharedContext
     ☐ SharedExample
     ✔ It - standard @done(19-06-30 21:10)

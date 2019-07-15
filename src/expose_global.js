@@ -15,13 +15,11 @@ const execution = {
   it: false,
   xit: false,
   pend: false,
-  // expect: false,
-  // is_expected: false
 };
 
 const executionHook = {
-  // beforeEach: false,
-  // afterEach: false,
+  beforeEach: false,
+  afterEach: false,
   before: false,
   after: false
 };

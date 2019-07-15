@@ -22,7 +22,6 @@ Add the following to your `.eslintrc.json` file in your spec directory:
 
 ## Future work:
 Block runners:
-* beforeEach and afterEach hooks
 * sharedExamples
 * sharedContexts
 

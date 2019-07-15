@@ -1,6 +1,6 @@
 {
   "name": "@jsspec/jsspec",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "JSSpec - contextualised test runner for javascript",
   "main": "index.js",
   "scripts": {
