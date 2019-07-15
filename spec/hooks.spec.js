@@ -131,3 +131,16 @@ describe('after', () => {
     });
   });
 });
+
+describe('after hook ends block execution', { random: false }, () => {
+  set('ping', pinger);
+
+  context('after hook runner', () => {
+    after(() => ping(100, true));
+    it('block for after hook test', () => {});
+  });
+
+  context('new block run', () => {
+    it('is a clean block', () => expect(ping()).to.eql(1));
+  });
+});

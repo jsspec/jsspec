@@ -11,7 +11,9 @@ module.exports = {
     },
 
     runAfterHooks: async function() {
-      this.setTreeExecution(true);
+      const master = !this.executing;
+      if (master) this.setTreeExecution(true);
+
       for(let i=0; i< this.afterHooks.length; i++) {
         const hook = this.afterHooks[i];
         if (!hook.hasRun) {
@@ -22,9 +24,12 @@ module.exports = {
           this.emitter.emit('afterHookFailure', hook);
         }
       }
-      this.setTreeExecution(false);
-
       if(this.parent) await this.parent.runAfterHooks();
+
+      if (master) {
+        this.endBlock();
+        this.setTreeExecution(false);
+      }
     }
   },
   global: {
