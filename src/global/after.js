@@ -17,11 +17,13 @@ module.exports = {
       for(let i=0; i< this.afterHooks.length; i++) {
         const hook = this.afterHooks[i];
         if (!hook.hasRun) {
-          await hook.run().catch(error => hook.failure = error);
-          hook.hasRun = true;
-        }
-        if (hook.failure) {
-          this.emitter.emit('afterHookFailure', hook);
+          try{
+            hook.hasRun = true;
+            await hook.run();
+          }catch(failure) {
+            hook.failure = failure;
+            this.emitter.emit('contextLevelFailure', hook);
+          }
         }
       }
       if(this.parent) await this.parent.runAfterHooks();

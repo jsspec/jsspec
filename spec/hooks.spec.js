@@ -1,14 +1,5 @@
 'use strict';
-const nonExecutor = require('./spec_helper').nonExecutor;
-
-const pinger = () => {
-  let value = 0;
-  return (offset = 1, set = false) => {
-    if (set) value = offset;
-    else value += offset;
-    return value;
-  };
-};
+const {nonExecutor, pinger} = require('./spec_helper');
 
 describe('hooks', () => {
   context('hooks only run if there is an example', () => {

@@ -2,7 +2,7 @@
 
 const Context = require('../context');
 
-// only the globalised method sits here. The functionallity is in the base class
+// only the globalised method sits here. The functionality is in the base class
 module.exports = {
   global(description, optionsOrBlock, block) {
     let context;

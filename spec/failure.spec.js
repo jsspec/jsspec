@@ -8,8 +8,13 @@ let spawned = cp.spawnSync(process.argv[0], [process.argv[1], '-r', 'not/a/file.
 let result = spawned.stdout.toString();
 
 describe('failures', () => {
-  set('failures', 6);
-  set('total', () => failures);
+  set('failures', 7);
+  set('contextLevelFailures', 1)
+  set('total', () => failures - contextLevelFailures);
+
+  it('exits with a non-zero result', () => {
+    expect(spawned.status).to.be.a('number').and.not.eql(0);
+  });
 
   it('fails as expected', () => {
     expect(result).to.include(`${total} examples, ${failures} failures`);
@@ -33,5 +38,10 @@ describe('failures', () => {
     // Error preparation coverage
     expect(result).to.match(/\d+\) Error preparation hits the non-filename code for an eval/);
     expect(result).to.match(/\d+\) Location extraction hits the non-filename code/);
+
+    // Bad invocation
+    expect(result).to.match(/\d+\) Bad invocation/);
+    expect(result).to.include('No shared example named \'a shared example that does not exist\' available in this context');
+
   });
 });

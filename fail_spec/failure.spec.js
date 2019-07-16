@@ -33,3 +33,8 @@ describe('Error preparation', () => {
 });
 
 eval('describe("Location extraction", () => it("hits the non-filename code", () => { expect(1).to.eql(2)}));');
+
+
+describe('Bad invocation', () => {
+  itBehavesLike('a shared example that does not exist');
+})

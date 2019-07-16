@@ -25,8 +25,8 @@ const executionHook = {
 };
 
 const shared = {
-  // sharedExample: false,
-  // itBehavesLike: false
+  sharedExamples: false,
+  itBehavesLike: false
 };
 
 const globals = Object.keys({
