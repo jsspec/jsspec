@@ -9,7 +9,7 @@ let result = spawned.stdout.toString();
 
 describe('failures', () => {
   set('failures', 7);
-  set('contextLevelFailures', 1)
+  set('contextLevelFailures', 1);
   set('total', () => failures - contextLevelFailures);
 
   it('exits with a non-zero result', () => {

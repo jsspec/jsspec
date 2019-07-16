@@ -37,4 +37,4 @@ eval('describe("Location extraction", () => it("hits the non-filename code", () 
 
 describe('Bad invocation', () => {
   itBehavesLike('a shared example that does not exist');
-})
+});
