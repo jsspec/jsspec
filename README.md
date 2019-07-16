@@ -26,7 +26,6 @@ Block runners:
 
 Runner:
 * improved output for file level failures
-* Glob filename matching
 * Targeted test running
 * Concurrent runners
 * File watch running

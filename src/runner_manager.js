@@ -12,11 +12,12 @@ class RunnerManager extends EventEmitter {
 
   async run() {
     // check for errors
-    let fileList = new Walker(this.settings.files).all;
-    if (this.settings.random) fileList = fileList.sort(() => Math.random() - 0.5);
+    let fileLister = new Walker(this.settings.files, this.settings.random);
+
     let failed = false;
-    for (let i = 0; i < fileList.length; i++) {
-      failed = await this.runFile(fileList[i]) || failed;
+    let lister = fileLister.lister();
+    for await (const file of lister) {
+      failed = await this.runFile(file) || failed;
     }
     this.emit('runEnd');
     return failed;}

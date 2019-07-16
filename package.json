@@ -1,10 +1,10 @@
 {
   "name": "@jsspec/jsspec",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "JSSpec - contextualised test runner for javascript",
   "main": "index.js",
   "scripts": {
-    "test": "c8 --clean -- bin/jsspec -r chai/register-expect -R spec/running.spec.js spec/options.spec.js spec/example.spec.js spec/error.spec.js spec/hooks.spec.js spec/each.spec.js spec/failure.spec.js spec/shared_examples.spec.js"
+    "test": "c8 --clean -- bin/jsspec -r chai/register-expect -R spec/running.spec.js 'spec/*.spec.js'"
   },
   "bin": "bin/jsspec",
   "repository": {
@@ -19,7 +19,8 @@
   ],
   "dependencies": {
     "@jsspec/cli-options": "0.0.6",
-    "@jsspec/format": "0.0.12"
+    "@jsspec/format": "0.0.12",
+    "glob": "^7.1.4"
   },
   "devDependencies": {
     "c8": "^4.1.5",
