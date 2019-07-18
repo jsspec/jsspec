@@ -2,6 +2,10 @@
 
 const Context = require('../context');
 
+class SharedExamples extends Context {
+  get indexed() { return true; }
+}
+
 module.exports = {
   global(sharedExamplesName, ...args) {
     const sharedExampleContext = this.currentContext.findExamples(sharedExamplesName);
@@ -12,7 +16,7 @@ module.exports = {
       return;
     }
 
-    const context = new Context(
+    const context = new SharedExamples(
       `it behaves like ${sharedExampleContext.description}`,
       sharedExampleContext.optionsOrBlock,
       sharedExampleContext.contextBlock.bind(null, ...args),

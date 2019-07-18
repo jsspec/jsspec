@@ -1,3 +1,6 @@
+*** 0.0.10 x
+* Ensure sharedExamples report with indexed locations
+
 *** 0.0.9
 * Add sharedExamples
 * Change `afterHookFailure` to `contextLevelFailure`

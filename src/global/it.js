@@ -8,18 +8,15 @@ module.exports = {
     addExecutor(example) {
       if (this.executing) { throw ReferenceError('An example block (`it`) can not be defined inside another'); }
 
-      const prev = this.examples[this.examples.length - 1];
+      const prev = this.examples[this.examples.length - 1] || { index: this.indexed && [...this.index(), -1] };
       this.examples.push(example);
-      if (prev && prev.unIndexedLocation === example.unIndexedLocation) {
-        let index;
+
+      if (this.indexed || prev.unIndexedLocation === example.unIndexedLocation) {
         if (!prev.index) {
-          index = this.index();
-          index.push(0);
-          prev.index = index;
+          prev.index = [...this.index(), 0];
         }
-        index = prev.index.slice();
-        index[index.length - 1]++;
-        example.index = index;
+        example.index = [...prev.index];
+        example.index[example.index.length - 1]++;
       }
     },
 
@@ -28,7 +25,7 @@ module.exports = {
       if (this.parent) this.parent.setTreeExecution(state);
     },
 
-    runExample: async function(example) {
+    async runExample(example) {
       this.setTreeExecution(true);
       try {
         this.emitter.emit('exampleStart', example);
@@ -38,7 +35,7 @@ module.exports = {
         await example.run();
 
         await this.runAfterEach();
-      } catch (e) { 
+      }catch (e) {
         example.failure = e;
       }
       this.emitter.emit('exampleEnd', example);
