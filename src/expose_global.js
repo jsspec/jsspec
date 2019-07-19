@@ -2,7 +2,7 @@ const Context = require('./context');
 
 const lazyEvaluate = {
   set: false,
-  subject: false
+  subject: false,
 };
 const contextual = {
   context: false,
@@ -21,12 +21,14 @@ const executionHook = {
   beforeEach: false,
   afterEach: false,
   before: false,
-  after: false
+  after: false,
 };
 
 const shared = {
   sharedExamples: false,
-  itBehavesLike: false
+  itBehavesLike: false,
+  sharedContext: false,
+  includeContext: false,
 };
 
 const globals = Object.keys({

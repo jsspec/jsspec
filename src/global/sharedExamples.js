@@ -2,7 +2,6 @@
 
 const Context = require('../context');
 
-// only the globalised method sits here. The functionality is in the base class
 module.exports = {
   initialise() {
     this.sharedExamples = [];

@@ -38,3 +38,7 @@ eval('describe("Location extraction", () => it("hits the non-filename code", () 
 describe('Bad invocation', () => {
   itBehavesLike('a shared example that does not exist');
 });
+
+describe('Bad invocation', () => {
+  includeContext('a shared context that does not exist');
+});

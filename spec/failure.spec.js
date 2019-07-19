@@ -8,8 +8,8 @@ let spawned = cp.spawnSync(process.argv[0], [process.argv[1], '-r', 'not/a/file.
 let result = spawned.stdout.toString();
 
 describe('failures', () => {
-  set('failures', 7);
-  set('contextLevelFailures', 1);
+  set('failures', 8);
+  set('contextLevelFailures', 2);
   set('total', () => failures - contextLevelFailures);
 
   it('exits with a non-zero result', () => {
@@ -42,6 +42,7 @@ describe('failures', () => {
     // Bad invocation
     expect(result).to.match(/\d+\) Bad invocation/);
     expect(result).to.include('No shared example named \'a shared example that does not exist\' available in this context');
+    expect(result).to.include('No shared context named \'a shared context that does not exist\' available in this context');
 
   });
 });

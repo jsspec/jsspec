@@ -21,9 +21,6 @@ Add the following to your `.eslintrc.json` file in your spec directory:
 ```
 
 ## Future work:
-Block runners:
-* sharedContexts
-
 Runner:
 * improved output for file level failures
 * Targeted test running
