@@ -15,7 +15,7 @@ Run:
     ✔ After Hooks @done(19-07-12 22:19)
     ✔ AfterEach @done(19-07-15 17:35)
     ✔ BeforeEach @done(19-07-15 17:35)
-    ☐ SharedContext
+    ✔ SharedContext @done(19-07-19 14:47)
     ✔ SharedExample @done(19-07-16 23:57)
     ✔ It - standard @done(19-06-30 21:10)
     ☐ It - shorthand

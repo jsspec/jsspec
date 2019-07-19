@@ -1,6 +1,8 @@
-*** 0.0.10 x
-* Ensure sharedExamples report with indexed locations
+*** 0.0.11
 * Add sharedContext
+
+*** 0.0.10
+* Ensure sharedExamples report with indexed locations
 
 *** 0.0.9
 * Add sharedExamples
