@@ -1,10 +1,10 @@
 Run:
-  ☐ Executable from command line
+  ✔ Executable from command line @done(19-07-22 15:33)
     ✔ Accepts formatter @done(19-06-30 21:10)
-    ☐ Accepts filename(s)
+    ✔ Accepts filename(s) @done(19-07-22 15:33)
       ✔ Full path @done(19-06-30 21:11)
       ✔ With Glob @done(19-07-16 23:56)
-      ☐ targted example runs
+      ✔ targted example runs @done(19-07-22 15:33)
     ✔ Accpets pre-require(s) @done(19-07-15 17:35)
     ✔ Accpets random toggle @done(19-06-30 21:10)
   ✔ Runs random @done(19-06-30 21:11)

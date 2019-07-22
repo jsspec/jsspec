@@ -23,7 +23,6 @@ Add the following to your `.eslintrc.json` file in your spec directory:
 ## Future work:
 Runner:
 * improved output for file level failures
-* Targeted test running
 * Concurrent runners
 * File watch running
 

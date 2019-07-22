@@ -1,5 +1,11 @@
+*** 0.0.12
+* Improve named `subject` handling
+* Change output for after hook failures
+* Enable line and indexed runs
+
 *** 0.0.11
 * Add sharedContext
+* Add glob matching
 
 *** 0.0.10
 * Ensure sharedExamples report with indexed locations
