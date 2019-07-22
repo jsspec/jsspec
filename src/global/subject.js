@@ -18,7 +18,8 @@ const settings = {
 
         throw ReferenceError('Subject is not defined in this context');
       }
-      return this.compute(this.subject);
+      if (this.subject) return global[this.subject];
+      return this.compute(null);
     }
   },
   global: {
@@ -29,7 +30,7 @@ const settings = {
     },
     executeGet() {
       if ('subjectValue' in this.currentContext) return this.currentContext.subjectValue;
-      return this.currentContext.retrieveSubject();
+      return this.currentContext.subjectValue = this.currentContext.retrieveSubject();
     },
     executeSet(value) {
       return this.currentContext.subjectValue = value;
