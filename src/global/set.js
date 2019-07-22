@@ -93,8 +93,5 @@ module.exports = {
   },
   global(key, value) {
     this.currentContext.addDefinition(key, value);
-  },
-  class: {
-
   }
 };

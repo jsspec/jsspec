@@ -16,12 +16,10 @@ module.exports = {
       return;
     }
 
-    const context = new SharedExamples(
+    new SharedExamples(
       `it behaves like ${sharedExampleContext.description}`,
       sharedExampleContext.optionsOrBlock,
       sharedExampleContext.contextBlock.bind(null, ...args),
       this.currentContext);
-
-    context.prepare();
   }
 };

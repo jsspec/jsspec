@@ -57,13 +57,9 @@ class Context {
     currentContext = this;
     return count;}
 
-  prepare() {
-    currentContext = this;
-    this.contextBlock.call();
-    currentContext = this.parent;
-  }
-
   async run() {
+    this.contextBlock.call();
+
     let count = 0;
     let failed = false;
     baseContext.emitter.emit('contextStart', this.id, this.constructor.name, this.description);
