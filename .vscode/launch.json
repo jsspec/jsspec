@@ -7,8 +7,15 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/index.js"
+      "name": "Test",
+      "program": "${workspaceFolder}/bin/jsspec",
+      "args": [
+        "-r",
+        "chai/register-expect",
+        "-",
+        "${file}"
+      ],
+      "internalConsoleOptions": "openOnSessionStart"
     }
   ]
 }
