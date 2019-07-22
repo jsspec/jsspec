@@ -1,5 +1,7 @@
 'use strict';
 
+class Location {}
+
 let currentContext;
 let baseContext;
 
@@ -12,7 +14,23 @@ class Context {
       parent.addChild(this);
       this.parent = parent;
     }
-    const { timeout, random } = {timeout: 200, ...(parent || {}), ...options};
+    const { timeout, random, line, runIndex } = { timeout: 200, ...(parent || {}), ...options };
+    if (runIndex) {
+      this.runIndex = [...runIndex];
+      const first = this.runIndex.shift();
+      if (this.runIndex.length) {
+        this.contextIndex = first;
+      } else {
+        delete this.runIndex;
+        this.exampleIndex = first;
+      }
+    }
+    const location = new Location();
+    Error.captureStackTrace(location);
+
+    this._location = location.stack;
+
+    this.line = line;
     this.timeout = timeout;
     this.random = random;
     this.description = description;
@@ -34,45 +52,77 @@ class Context {
     return index;
   }
 
-  // close() {
-  //   this.children.forEach(child => child.close());
-  //   this.children = [];
-  // }
-
   addChild(child) {
     child.id = this.id + ':' + this.children.push(child);
   }
 
+  selectedContexts() {
+    let selected;
+    if (this.line) {
+      let i = this.children.length;
+      while (i--) {
+        if (this.children[i]._location.line <= this.line) break;
+      }
+      selected = [i];
+    } else if ('contextIndex' in this) {
+      selected = [this.contextIndex];
+    } else if ('exampleIndex' in this) {
+      selected = [];
+    } else {
+      selected = Object.keys(this.children);
+    }
+
+    if (selected[0] >= this.children.length || selected[0] < 0) return [];
+    return selected;
+  }
+
   async runChildren() {
-    const order = Object.keys(this.children);
+    let selected = this.selectedContexts();
     if (this.random) {
-      order.sort(() => Math.random() - 0.5);
+      selected.sort(() => Math.random() - 0.5);
     }
     let count = 0;
-    for (let i = 0; i < this.children.length; i++) {
-      currentContext = this.children[order[i]];
+    for (let i = 0; i < selected.length; i++) {
+      currentContext = this.children[selected[i]];
       count += await currentContext.run();
       this.failed = this.failed || currentContext.failed;
     }
     currentContext = this;
     return count;}
 
+  selectedExamples() {
+    let selected;
+    if ('contextIndex' in this) {
+      selected = []; // need to go deeper
+    } else if (this.line) {
+      selected = [this.examples.findIndex(({ line }) => line === this.line)];
+    } else if ('exampleIndex' in this) {
+      // this has to be an indexed example
+      selected = [this.examples.findIndex(({index}) => index && this.exampleIndex === index[index.length -1])];
+    } else {
+      selected = Object.keys(this.examples);
+    }
+    if (selected[0] < 0 || selected[0] > this.examples.length) selected = [];
+    return selected;
+  }
+
   async run() {
     this.contextBlock.call();
+    const selected = this.selectedExamples();
 
     let count = 0;
     let failed = false;
+
     baseContext.emitter.emit('contextStart', this.id, this.constructor.name, this.description);
     if (!this.constructor.name.startsWith('X')) {
-      const order = Object.keys(this.examples);
-
       if (this.random) {
-        order.sort(() => Math.random() - 0.5);
+        selected.sort(() => Math.random() - 0.5);
       }
-      for (let i = 0; i < order.length; i++) {
-        failed = await this.runExample(this.examples[order[i]]) || failed;
+      for (let i = 0; i < selected.length; i++) {
+        failed = await this.runExample(this.examples[selected[i]]) || failed;
       }
-      count = await this.runChildren() + order.length;
+
+      count = await this.runChildren() + selected.length;
       if (count) await this.runAfterHooks();
     }
     this.failed = failed;

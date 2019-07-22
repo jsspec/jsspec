@@ -8,16 +8,15 @@ module.exports = {
     addExecutor(example) {
       if (this.executing) { throw ReferenceError('An example block (`it`) can not be defined inside another'); }
 
-      const prev = this.examples[this.examples.length - 1] || { index: this.indexed && [...this.index(), -1] };
+      const beforeZeroIndex = [...this.index(), -1];
+      const prev = this.examples[this.examples.length - 1] || { index: beforeZeroIndex };
       this.examples.push(example);
-
-      if (this.indexed || prev.unIndexedLocation === example.unIndexedLocation) {
-        if (!prev.index) {
-          prev.index = [...this.index(), 0];
-        }
-        example.index = [...prev.index];
-        example.index[example.index.length - 1]++;
+      if (!this.indexed && prev.unIndexedLocation !== example.unIndexedLocation) return;
+      if (prev.unIndexedLocation === example.unIndexedLocation && !prev.index) {
+        prev.index = [...this.index(), 0];
       }
+      example.index = [...(prev.index || beforeZeroIndex)];
+      example.index[example.index.length - 1]++;
     },
 
     setTreeExecution(state) {
@@ -35,7 +34,7 @@ module.exports = {
         await example.run();
 
         await this.runAfterEach();
-      }catch (e) {
+      } catch (e) {
         example.failure = e;
       }
       this.emitter.emit('exampleEnd', example);

@@ -13,10 +13,11 @@ describe('shared context', () => {
   describe('sibling', () => {
     after(() => expect(callCount).to.eql(4));
 
-    includeContext('a passing test');
-
-    // the after each get called for this one as well :thumbsup:
+    // the after each hooks get called for this one as well :thumbsup:
+    // note that this test is deliberately here to prove this case
     it('local call', () => callCount++);
+
+    includeContext('a passing test');
   });
 
   context('with args', () => {

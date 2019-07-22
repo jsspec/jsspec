@@ -22,13 +22,13 @@ class RunnerManager extends EventEmitter {
     this.emit('runEnd');
     return failed;}
 
-  async runFile(filename) {
-    this.emit('fileStart', filename);
-    const context = Context.begin(this, filename, this.settings);
-    const runner = new Runner(this, filename, context);
+  async runFile(file) {
+    this.emit('fileStart', file.name);
+    const context = Context.begin(this, file.name, { ...file, ...this.settings});
+    const runner = new Runner(this, file.name, context);
     const failed = await runner.run();
     context.reset();
-    this.emit('fileEnd', filename);
+    this.emit('fileEnd', file.name);
     return failed;}
 }
 

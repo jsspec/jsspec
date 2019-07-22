@@ -14,9 +14,19 @@ class Walker {
     this.random = random;
     this.globList = [];
     this.fileList = [];
-    globOrFileList.forEach(name => {
-      if (hasMagic(name)) this.globList.push(name);
-      else this.fileList.push(name);
+    globOrFileList.forEach(argName => {
+      // let name = argName;
+      let [, name, runIndex, line] = argName.match(/^(.*?)(?:\[(\d+(?::\d+)*)]|(?::(\d+)))?$/);
+      if (hasMagic(name)) {
+        return this.globList.push(argName);
+      }
+      if (runIndex) {
+        this.fileList.push({ name, runIndex: runIndex.split(':').map(value => parseInt(value) - 1) });
+      } else if (line) {
+        this.fileList.push({ name, line: parseInt(line) });
+      } else {
+        this.fileList.push({ name });
+      }
     });
 
     this.globResults = [];
@@ -67,8 +77,11 @@ class Walker {
         os = 0;
       }
       const selected = this.fileList.splice(os, 1)[0];
-      if (!this.responded.has(selected)) {
-        this.responded.add(selected);
+
+      if (!this.responded.has(selected.name)) {
+        if (!(selected.runIndex || selected.line)) {
+          this.responded.add(selected.name); // we only track the ones we've run the whole file for
+        }
         return selected;
       }
     }
@@ -79,10 +92,10 @@ class Walker {
       } else {
         os = 0;
       }
-      const selected = this.globResults.splice(os, 1)[0];
-      if (!this.responded.has(selected)) {
-        this.responded.add(selected);
-        return selected;
+      const name = this.globResults.splice(os, 1)[0];
+      if (!this.responded.has(name)) {
+        this.responded.add(name);
+        return { name };
       }
     }
     // exit if we're done
@@ -96,7 +109,7 @@ class Walker {
     const match = await promise;
 
     this.responded.add(match);
-    if (match) return match;
+    if (match) return { name: match };
   }
   // [Symbol.iterator]() { return this.lister; }
 }

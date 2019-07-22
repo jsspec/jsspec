@@ -22,6 +22,8 @@ class Example {
   }
 
   get location() {
+    if(!this._location) return undefined;
+
     if (this.index) {
       return this._location.fileName + '[' + this.index.map(v => v + 1).join(':') + ']';
     }
@@ -29,7 +31,11 @@ class Example {
   }
 
   get unIndexedLocation() {
-    return this._location.fileName + ':' + this._location.line;
+    return this._location.fileName + ':' + this.line;
+  }
+
+  get line() {
+    return this._location.line;
   }
 
   async run() {

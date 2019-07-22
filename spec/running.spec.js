@@ -70,7 +70,13 @@ context('running2', function funThing2() {
   });
 });
 
-describe('using keys that are not set in the context', () => {
+describe('using keys that are not set in the context', {random: false}, () => {
+  context('not defined yet here', () => {
+    it('fails', () =>
+      expect(() => isSet).to.throw(ReferenceError, 'isSet is not defined')
+    );
+  });
+
   context('set here', () => {
     set('isSet', () => 1);
     it('works', () =>
