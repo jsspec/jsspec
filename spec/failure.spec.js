@@ -31,7 +31,7 @@ describe('failures', () => {
     expect(result).to.match(/\d+\) before hook at depth fails further calls/);
 
     // failure in after hook
-    expect(result).to.match(/\d+\) after hook In after hook: fails with it's own report/);
+    expect(result).to.match(/\d+\) \[In after hook\] after hook fails with it's own report/);
 
     // TODO: silently ignores missing require files - and bad file
 
