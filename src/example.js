@@ -1,4 +1,5 @@
-class Location {}
+const locator = require('./locator');
+
 class AssertionError extends Error {}
 
 class Example {
@@ -11,10 +12,7 @@ class Example {
     this.block = block;
     this.context = context;
 
-    const location = new Location();
-    Error.captureStackTrace(location);
-
-    this._location = location.stack;
+    this._location = locator.location;
   }
 
   get fullDescription() {

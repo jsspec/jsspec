@@ -1,3 +1,6 @@
+*** 0.0.13
+* Re-assign stack prep code every time a location is required
+
 *** 0.0.12
 * Improve named `subject` handling
 * Change output for after hook failures

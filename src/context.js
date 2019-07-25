@@ -1,6 +1,6 @@
 'use strict';
 
-class Location {}
+const locator = require('./locator');
 
 let currentContext;
 let baseContext;
@@ -25,10 +25,7 @@ class Context {
         this.exampleIndex = first;
       }
     }
-    const location = new Location();
-    Error.captureStackTrace(location);
-
-    this._location = location.stack;
+    this._location = locator.location;
 
     this.line = line;
     this.timeout = timeout;
