@@ -1,4 +1,5 @@
 const Example = require('../example');
+const filterStack = require('../filter_stack');
 
 module.exports = {
   initialise() {
@@ -35,6 +36,7 @@ module.exports = {
 
         await this.runAfterEach();
       } catch (e) {
+        filterStack(e);
         example.failure = e;
       }
       this.emitter.emit('exampleEnd', example);

@@ -3,14 +3,15 @@ const formatters = require('@jsspec/format');
 const path = require('path');
 
 const requireFromCwd = file => {
-  if (file.startsWith('.')) return require(path.join(process.cwd(), file));
+  const cwd = process.cwd();
+  if (file.startsWith('.')) return require(path.join(cwd, file));
   else {
     try {
-      return require(file);
+      return require(require.resolve(file, { paths: [cwd] }));
     }catch (error) {
       if (!error.message.includes(`Cannot find module '${file}'`)) throw error;
 
-      return require(path.join(process.cwd(), file));
+      return require(path.join(cwd, file));
     }
   }
 };
@@ -20,7 +21,7 @@ const jsSpecCLIOptions = {
   require: { alias: 'r', type: Array, required: false, default: [] },
   format: { alias: 'f', type: String, required: false, default: 'documentation' },
   timeout: { alias: 't', type: Number, required: false, default: 200 },
-  files: { type: Array, required: false, default: [] }
+  files: { type: Array, required: false, default: ['spec/**/*.spec.js'] }
 };
 
 class JSSpecOptions {

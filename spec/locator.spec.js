@@ -2,7 +2,7 @@
 
 const locator = require('../src/locator');
 
-describe('Location is the last callsite not in `src`', () => {
+describe('Location is the last call site not in `src`', () => {
   subject('location', () => locator.location);
 
   it('contains the context description', () => {

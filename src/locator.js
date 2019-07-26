@@ -1,10 +1,33 @@
 'use strict';
 
-const prepareStackTrace = (error, stack) => {
+const originalPrep = Error.prepareStackTrace;
+
+let previous;
+let preDepth;
+
+const prepareStackTraceModified = (error, stack) => {
+  let modifiedStack = previous(error, stack);
+
   let os = 0;
   while (os < stack.length) {
-    const fileName = stack[os].getFileName() || '';
-    if (!fileName.startsWith(__dirname) && fileName.length) {
+    const fileName = stack[os].getFileName();
+    if (fileName && !fileName.startsWith(__dirname)) {
+      const previousStack = modifiedStack.split('\n');
+      return {
+        fileName,
+        line: parseInt(previousStack[os + 1].match(new RegExp(`${fileName}:(\\d+)`))[1])
+      };
+    }
+    os++;
+  }
+};
+
+
+const prepareStackTraceNice = (error, stack) => {
+  let os = 0;
+  while (os < stack.length) {
+    const fileName = stack[os].getFileName();
+    if (fileName && !fileName.startsWith(__dirname)) {
       return {
         fileName,
         line: stack[os].getLineNumber()
@@ -14,23 +37,23 @@ const prepareStackTrace = (error, stack) => {
   }
 };
 
-
 const getLocation = (owner) => {
-  let preStack = Error.prepareStackTrace;
-  let preDepth = Error.stackTraceLimit;
-  
-  Error.prepareStackTrace = prepareStackTrace;
+  previous = Error.prepareStackTrace;
+  preDepth = Error.stackTraceLimit;
+
+  if (previous !== originalPrep) Error.prepareStackTrace = prepareStackTraceModified;
+  else Error.prepareStackTrace = prepareStackTraceNice;
   Error.captureStackTrace(owner);
   owner.stack;
 
-  Error.prepareStackTrace = preStack;
+  Error.prepareStackTrace = previous;
   Error.stackTraceLimit = preDepth;
 };
 
 class Location {
   get location() {
     getLocation(this);
-    return {...this.stack};
+    return { ...this.stack };
   }
 }
 

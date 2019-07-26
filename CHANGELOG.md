@@ -1,3 +1,8 @@
+*** 0.0.14
+* Filter error stack when prep is already overridden
+* Reduce lag when stack prep hasn't been overridden already (includes for locator)
+* Add default spec files: `spec/**/*.js`
+
 *** 0.0.13
 * Re-assign stack prep code every time a location is required
 

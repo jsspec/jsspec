@@ -1,3 +1,4 @@
+const filterStack = require('../filter_stack');
 const Example = require('../example');
 
 class AfterExample extends Example {
@@ -27,6 +28,7 @@ module.exports = {
             hook.hasRun = true;
             await hook.run();
           }catch(failure) {
+            filterStack(failure);
             hook.failure = failure;
             delete hook._location;
             this.emitter.emit('contextLevelFailure', hook);
