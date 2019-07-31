@@ -70,7 +70,7 @@ context('running2', function funThing2() {
   });
 });
 
-describe('using keys that are not set in the context', {random: false}, () => {
+describe('using keys that are not set in the context', { random: false }, () => {
   context('not defined yet here', () => {
     it('fails', () =>
       expect(() => isSet).to.throw(ReferenceError, 'isSet is not defined')
@@ -79,6 +79,7 @@ describe('using keys that are not set in the context', {random: false}, () => {
 
   context('set here', () => {
     set('isSet', () => 1);
+
     it('works', () =>
       expect(() => isSet).not.to.throw()
     );
@@ -94,6 +95,7 @@ describe('using keys that are not set in the context', {random: false}, () => {
 describe('calling set with a non string', () => {
   try {
     set(Symbol('badness'), 5);
+
     it('should not execute this block', nonExecutor);
   }catch (e) {
     it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
@@ -104,6 +106,7 @@ describe('accessing a `set` value outside of an example', () => {
   set('value', 1);
   try {
     let otherValue = value; // eslint-disable-line no-unused-vars
+
     it('should not execute this block', nonExecutor);
   }catch (e) {
     it('fails', () => expect(e).to.be.an.instanceOf(ReferenceError));
@@ -131,7 +134,7 @@ describe('_coverage_', { timeout: 0 }, () => {
 
 describe('incorrect nesting', () => {
   set('value', 1);
-  context('assigning to a value outside of an example', {timeout: 200}, () => {
+  context('assigning to a value outside of an example', { timeout: 200 }, () => {
     try {
       value = 2;
       it('should not execute this block', nonExecutor);
@@ -159,7 +162,7 @@ describe('incorrect nesting', () => {
   });
 
   it('contexts in "it" blocks are not allowed', () => {
-    expect(() => 
+    expect(() =>
       context('this is not good', nonExecutor)
     ).to.throw(ReferenceError, 'A context block can not be defined inside an example');
   });

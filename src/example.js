@@ -1,3 +1,5 @@
+'use strict';
+
 const locator = require('./locator');
 
 class AssertionError extends Error {}
@@ -15,13 +17,33 @@ class Example {
     this._location = locator.location;
   }
 
+  toJSON() {
+    return {
+      description: this.description,
+      fullDescription: this.fullDescription,
+      kind: this.kind,
+      base: this.base,
+      timeout: this.timeout,
+      failure: this.failure && {
+        constructor: {
+          name: this.failure.constructor.name
+        },
+        stack: this.failure.stack,
+        message: this.failure.message,
+        expected: this.failure.expected,
+        actual: this.failure.actual,
+      }
+    };
+  }
+
+  get base() {
+    return this.context.base;
+  }
   get fullDescription() {
     return this.context.fullDescription + ' ' + this.description;
   }
 
   get location() {
-    if(!this._location) return undefined;
-
     if (this.index) {
       return this._location.fileName + '[' + this.index.map(v => v + 1).join(':') + ']';
     }

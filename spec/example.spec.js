@@ -31,4 +31,21 @@ describe('Example', () => {
       });
     });
   });
+
+  describe('#toJSON', () => {
+    subject(() => example.toJSON());
+
+    beforeEach(() => example.failure = new Error('bad things'));
+
+    it('has the required components', () =>{
+      expect(subject).to.have.all.keys([
+        'description',
+        'fullDescription',
+        'kind',
+        'base',
+        'timeout',
+        'failure'
+      ]);
+    });
+  });
 });

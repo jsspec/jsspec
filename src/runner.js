@@ -1,40 +1,36 @@
 'use strict';
 
 require('./expose_global');
-const path = require('path');
 
-const requireFromCwd = file => {
-  if (file.startsWith('.')) return require(path.join(process.cwd(), file));
-  else {
-    try {
-      return require(file);
-    }catch (error) {
-      if (!error.message.includes(`Cannot find module '${file}'`)) throw error;
-
-      return require(path.join(process.cwd(), file));
-    }
-  }
-};
+const Context = require('./context');
+const resolve = require('./utility/resolve');
 
 class Runner {
-  constructor(runnerManager, filename, context) {
-    this.settings = runnerManager.settings;
-    this.manager = runnerManager;
-    this.filename = filename;
-    this.context = context;
+  constructor(settings, file, index) {
+    this.index = index;
+    this.settings = settings;
+
+    this.file = {...file};
+    this.file.name = resolve(file.name);
 
     this.errors = [];
   }
-
-  async run() {
+  async run(emitter) {
     try {
-      requireFromCwd(this.filename);
+      const key = `__${this.index}`;
+      const context = Context.begin(emitter, key, { ...this.file, ...this.settings });
+      require(this.file.name);
+      emitter.emit('fileStart', key);
+      await context.runChildren();
+      emitter.emit('fileEnd', key);
+      context.reset();
+      return context.failed;
     }catch (error) {
       this.errors.push(error);
       console.log('LOAD ERROR', error);
+      return false;
     }
-    await this.context.runChildren();
-    return this.context.failed;}
+  }
 }
 
 module.exports = Runner;

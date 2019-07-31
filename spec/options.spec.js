@@ -11,9 +11,8 @@ describe('Options', () => {
     set('args', () => [`-r=${required}`, '-Rf', 'd'].concat(specFiles));
 
     it('has no errors', () => expect(subject.errors).to.be.empty);
-
+ 
     it('sets the reporter', () => {
-      expect(subject.reporterClass).to.be.an.instanceOf(Function);
       expect(subject.reporterClass).to.eql(Documentation);
     });
 
@@ -28,7 +27,7 @@ describe('Options', () => {
 
       it('has an error', () => expect(subject.errors).to.have.length(1));
     });
-
+ 
     context('with a bad formatter', () => {
       set('format', 'not/a/file.js');
       set('args', () => [`-f=${format}`].concat(specFiles));

@@ -18,7 +18,7 @@ class CLI {
   }
   async run() {
     const failed = await this.manager.run();
-    process.exit(failed ? 1 : 0);
+    if (!this.settings.watch) process.exit(failed ? 1 : 0);
   }
 }
 

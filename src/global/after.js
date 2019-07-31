@@ -30,7 +30,6 @@ module.exports = {
           }catch(failure) {
             filterStack(failure);
             hook.failure = failure;
-            delete hook._location;
             this.emitter.emit('contextLevelFailure', hook);
           }
         }

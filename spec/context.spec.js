@@ -7,11 +7,11 @@ describe('Context', () => {
   set('options', {});
   set('block', () => () => {});
 
-  subject(() => new Context(description, options, block));
+  subject('testContext', () => new Context(description, options, block));
 
   beforeEach(() => {
-    subject.children = [{ _location: { line: 5 } }, { _location: { line: 10 } }];
-    subject.examples = [{ line: 6 },{ line: 12, index: [1] }];
+    testContext.children = [{ _location: { line: 5 } }, { _location: { line: 10 } }];
+    testContext.examples = [{ line: 6 },{ line: 12, index: [1] }];
   });
 
   describe('sub context selection', () => {
@@ -87,6 +87,23 @@ describe('Context', () => {
       it('selects none', () => {
         expect(subject.selectedExamples()).to.eql([]);
       });
+    });
+  });
+
+  describe('#toJSON', () => {
+    subject(() => testContext.toJSON());
+
+    beforeEach(() => testContext.failure = new Error('bad things'));
+
+    it('has the required components', () =>{
+      expect(subject).to.have.all.keys([
+        'id',
+        'description',
+        'fullDescription',
+        'kind',
+        'base',
+        'failure'
+      ]);
     });
   });
 });

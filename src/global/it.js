@@ -31,7 +31,6 @@ module.exports = {
         this.emitter.emit('exampleStart', example);
         await this.runBeforeHooks();
         await this.runBeforeEach();
-
         await example.run();
 
         await this.runAfterEach();
@@ -42,7 +41,8 @@ module.exports = {
       this.emitter.emit('exampleEnd', example);
       this.endBlock();
       this.setTreeExecution(false);
-      return !!example.failure;}
+      return !!example.failure;
+    }
   },
   global: {
     build(description, optionOrBlock, block) {

@@ -1,13 +1,14 @@
 'use strict';
 const {nonExecutor, pinger} = require('./spec_helper');
 
+
 describe('hooks', () => {
   context('hooks only run if there is an example', () => {
     before(nonExecutor);
     after(nonExecutor);
   });
 });
-
+ 
 describe('before', () => {
   set('ping', pinger);
 

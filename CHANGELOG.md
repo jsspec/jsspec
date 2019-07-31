@@ -1,3 +1,7 @@
+*** 0.1.0
+* Add watch runner
+  - this changes the message signature for the formatter
+
 *** 0.0.14
 * Filter error stack when prep is already overridden
 * Reduce lag when stack prep hasn't been overridden already (includes for locator)

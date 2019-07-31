@@ -24,7 +24,6 @@ Add the following to your `.eslintrc.json` file in your spec directory:
 Runner:
 * improved output for file level failures
 * Concurrent runners
-* File watch running
 
 Associated modules:
 * companion expectation framework

@@ -95,7 +95,7 @@ class Context {
       selected = [this.examples.findIndex(({ line }) => line === this.line)];
     } else if ('exampleIndex' in this) {
       // this has to be an indexed example
-      selected = [this.examples.findIndex(({index}) => index && this.exampleIndex === index[index.length -1])];
+      selected = [this.examples.findIndex(({ index }) => index && this.exampleIndex === index[index.length - 1])];
     } else {
       selected = Object.keys(this.examples);
     }
@@ -110,7 +110,7 @@ class Context {
     let count = 0;
     let failed = false;
 
-    baseContext.emitter.emit('contextStart', this.id, this.constructor.name, this.description);
+    baseContext.emitter.emit('contextStart', this);
     if (!this.constructor.name.startsWith('X')) {
       if (this.random) {
         selected.sort(() => Math.random() - 0.5);
@@ -123,9 +123,36 @@ class Context {
       if (count) await this.runAfterHooks();
     }
     this.failed = failed;
-    baseContext.emitter.emit('contextEnd', this.id);
+    baseContext.emitter.emit('contextEnd', this);
     return count;}
 
+  get kind() {
+    return this.constructor.name;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      description: this.description,
+      fullDescription: this.fullDescription,
+      kind: this.kind,
+      base: this.base,
+      failure: this.failure && {
+        constructor: {
+          name: this.failure.constructor.name
+        },
+        stack: this.failure.stack,
+        message: this.failure.message,
+        expected: this.failure.expected,
+        actual: this.failure.actual,
+      }
+    };
+  }
+
+  get base() {
+    if (this.parent) return this.parent.base;
+    return this.id;
+  }
   get emitter() {
     return baseContext._emitter;
   }
