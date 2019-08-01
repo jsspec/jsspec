@@ -3,11 +3,19 @@
 const Runner = require('./runner');
 const resolve = require('./utility/resolve');
 
+const { addHook } = require('pirates');
+
 const emitter = {
   emit(message, ...data) { process.send([message, ...data]); }
 };
 
 const runner = async ({ settings, file, index }) => {
+  addHook(
+    (code, filename) => {
+      emitter.emit('required', file.name, filename);
+      return code;
+    });
+
   if (settings.require) {
     settings.require = settings.require.filter(
       // this doesn't need the catch block as the 

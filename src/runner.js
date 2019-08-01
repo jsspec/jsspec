@@ -10,7 +10,8 @@ class Runner {
     this.index = index;
     this.settings = settings;
 
-    this.file = {...file};
+    this.file = { ...file };
+    this.file.originalName = file.name;
     this.file.name = resolve(file.name);
 
     this.errors = [];
@@ -22,7 +23,7 @@ class Runner {
       require(this.file.name);
       emitter.emit('fileStart', key);
       await context.runChildren();
-      emitter.emit('fileEnd', key);
+      emitter.emit('fileEnd', key, this.file.originalName);
       context.reset();
       return context.failed;
     }catch (error) {

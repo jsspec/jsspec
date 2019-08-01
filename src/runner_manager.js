@@ -14,7 +14,56 @@ class RunnerManager extends EventEmitter {
   constructor(settings) {
     super();
     this.settings = settings;
-    this.watched = new Map();
+    this.watchers = new Map();
+    this.requiredFiles = new Map();
+    this.specFiles = new Map();
+
+    if (this.settings.watch) {
+      this.on('required', this.addRequiredFile.bind(this));
+      this.on('fileEnd', this.purgeFiles.bind(this));
+
+      this.runViaFork = this.runViaFork.bind(this);
+    }
+  }
+
+  purgeFiles(_, specFile) {
+    const specFileData = this.specFiles.get(specFile);
+    if (!specFileData) return;
+
+    this.requiredFiles.forEach((specFiles, owned) => {
+      if (!specFileData.has(owned)) specFiles.delete(specFile);
+    });
+    specFileData.clear();
+  }
+
+  runWatched(changedFile) {
+    this.requiredFiles.get(changedFile).forEach(this.runViaFork);
+  }
+
+  forkSpec(name) {
+    fork(__dirname + '/watch.js')
+      .on('message', messageData => this.emit(...messageData))
+      .send({ file: { name }, index: ++index, settings: this.settings })
+  }
+
+  addRequiredFile(specFile, requiredFile) {
+    if (!this.specFiles.has(specFile)) { // first run - first file
+      const specInfo = new Set();
+      specInfo.time = Date.now();
+      this.specFiles.set(specFile, specInfo);
+    }
+    this.specFiles.get(specFile).add(requiredFile);
+    let specFilesThatRequire = this.requiredFiles.get(requiredFile);
+    if (!specFilesThatRequire) {
+      // set a listener for this file
+      specFilesThatRequire = new Set();
+      this.requiredFiles.set(requiredFile, specFilesThatRequire);
+    }
+    specFilesThatRequire.add(specFile);
+    if (!this.watchers.has(requiredFile)){
+      const watcher = watch(requiredFile, { persistent: true, interval: 501 }, () => this.runWatched(requiredFile));
+      this.watchers.set(requiredFile, watcher);
+    }
   }
 
   async run() {
@@ -25,8 +74,7 @@ class RunnerManager extends EventEmitter {
     let lister = fileLister.lister();
     for await (const file of lister) {
       if (this.settings.watch) {
-        //need to get the abs filename for this.
-        this.addWatch(file);
+        this.runViaFork(file.name);
       } else {
         failed = await this.runFile(file) || failed;
       }
@@ -38,41 +86,28 @@ class RunnerManager extends EventEmitter {
         process.exit(failed ? 1 : 0);
       });
     }
-    return failed;
-  }
-  
-  addWatch(file) {
-    if (this.watched.has(file)) return;
-    const watcher = watch(
-      file.name, { persistent: true, interval: 501 },
-      () => {
-        const time = Date.now();
-        if (time < watcher.time + 100) {
-          clearTimeout(watcher.timeout);
-        }
-        watcher.time = time;
-        watcher.timeout = setTimeout(() => this.runFile({ name: file.name }), 150);
-      }
-    );
-    watcher.time = Date.now();
-    this.watched.set(file, watcher);
-    this.runFile(file);
+    return failed;}
+
+  runViaFork(name) {
+    let specInfo = this.specFiles.get(name);
+    const time = Date.now();
+    if (!specInfo) {
+      specInfo = new Set();
+      specInfo.time = time;
+      this.specFiles.get(name);
+      return this.forkSpec(name);
+    }
+    // debounce
+    if (specInfo && time < specInfo.time + 100) {
+      clearTimeout(specInfo.timer);
+    }
+    specInfo.time = time;
+    specInfo.timer = setTimeout(() => this.forkSpec(name), 140);
   }
 
   async runFile(file) {
-    // fork here
-    if (this.settings.watch) {
-      return await new Promise(resolve => fork(__dirname + '/watch.js')
-        .on('exit', resolve)
-        .on('message', messageData => this.emit(...messageData))
-        .send({ file, index: index++, settings: this.settings })
-      ).catch(e => console.log(e));
-    } else {
-      // call in the -required files here, instead of in options
-      const runner = new Runner(this.settings, file, index++);
-      return await runner.run(this);
-    }
-  }
+    const runner = new Runner(this.settings, file, ++index);
+    return await runner.run(this);}
 }
 
 module.exports = RunnerManager;
