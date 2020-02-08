@@ -23,10 +23,10 @@
     "pirates": "^4.0.1"
   },
   "devDependencies": {
-    "c8": "^4.1.5",
+    "c8": "7.0.1",
     "chai": "^4.2.0",
-    "sinon": "^7.3.2",
-    "sinon-chai": "^3.3.0"
+    "sinon": "^8.1.1",
+    "sinon-chai": "^3.4.0"
   },
   "author": "HookyQR",
   "license": "ISC",
