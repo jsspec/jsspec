@@ -1,6 +1,8 @@
 const Example = require('../example');
 const filterStack = require('../filter_stack');
 
+const noOp = () => undefined;
+
 module.exports = {
   initialise() {
     this.examples = [];
@@ -27,16 +29,21 @@ module.exports = {
 
     async runExample(example) {
       this.setTreeExecution(true);
+      let attemptEachAfterIfFailed = false;
       try {
         this.emitter.emit('exampleStart', example);
         await this.runBeforeHooks();
         await this.runBeforeEach();
+        attemptEachAfterIfFailed = true;
         await example.run();
-
+        attemptEachAfterIfFailed = false;
         await this.runAfterEach();
       } catch (e) {
         filterStack(e);
         example.failure = e;
+        if (attemptEachAfterIfFailed) {
+          await this.runAfterEach().catch(noOp);
+        }
       }
       this.emitter.emit('exampleEnd', example);
       this.endBlock();
