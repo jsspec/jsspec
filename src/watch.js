@@ -18,7 +18,7 @@ const runner = async ({ settings, file, index }) => {
 
   if (settings.require) {
     settings.require = settings.require.filter(
-      // this doesn't need the catch block as the 
+      // this doesn't need the catch block as the
       // options filter will have removed any failed
       // files already
       requestedModule => require(resolve(requestedModule))

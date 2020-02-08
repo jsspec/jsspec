@@ -28,10 +28,11 @@ class Runner {
       return context.failed;
     }catch (error) {
       this.errors.push(error);
-      console.log('LOAD ERROR', error);
+      console.log('LOAD ERROR', error.stack || error);
       return false;
     }
   }
 }
+
 
 module.exports = Runner;

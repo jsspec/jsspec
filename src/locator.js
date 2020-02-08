@@ -5,17 +5,21 @@ const originalPrep = Error.prepareStackTrace;
 let previous;
 let preDepth;
 
+const wrapForWindows = file => file.replace(/\\/g,'\\\\')
+
 const prepareStackTraceModified = (error, stack) => {
   let modifiedStack = previous(error, stack);
 
   let os = 0;
+  const previousStack = modifiedStack.split('\n');
   while (os < stack.length) {
     const fileName = stack[os].getFileName();
     if (fileName && !fileName.startsWith(__dirname)) {
-      const previousStack = modifiedStack.split('\n');
+      const previousStackLine = previousStack[os + 1];
+      const lineSupply = previousStackLine.match(new RegExp(`${wrapForWindows(fileName)}:(\\d+)`));
       return {
         fileName,
-        line: parseInt(previousStack[os + 1].match(new RegExp(`${fileName}:(\\d+)`))[1])
+        line: lineSupply ? parseInt(lineSupply[1]) : null
       };
     }
     os++;

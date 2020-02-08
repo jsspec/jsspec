@@ -81,10 +81,12 @@ class RunnerManager extends EventEmitter {
     }
     if (!this.settings.watch) this.emit('runEnd');
     else {
-      process.on('SIGINT', () => {
+      const bail = () => {
         this.emit('runEnd');
         process.exit(failed ? 1 : 0);
-      });
+      }
+      process.on('SIGINT', bail);
+      process.stdin.on('data', data => data.toString() === 'x' && bail());
     }
     return failed;}
 
