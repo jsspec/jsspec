@@ -4,10 +4,10 @@ const { Describe } = require('./describe');
 
 class XDescribe extends Describe {}
 
-const nullExecutor = () => {};
+const noOp = () => undefined;
 
 module.exports = {
   global(description) {
-    new XDescribe(description, {}, nullExecutor, this.currentContext);
+    new XDescribe(description, {}, noOp, this.currentContext);
   }
 };

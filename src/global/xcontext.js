@@ -4,10 +4,10 @@ const Context = require('../context');
 
 class XContext extends Context {}
 
-const nullExecutor = () => {};
+const noOp = () => undefined;
 
 module.exports = {
   global(description) {
-    new XContext(description, {}, nullExecutor, this.currentContext);
+    new XContext(description, {}, noOp, this.currentContext);
   }
 };

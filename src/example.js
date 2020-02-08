@@ -1,6 +1,7 @@
 'use strict';
 
 const locator = require('./locator');
+const noOp = () => undefined;
 
 class AssertionError extends Error {}
 
@@ -60,7 +61,7 @@ class Example {
 
   async run() {
     if (this.timeout > 0)
-      return Promise.race([this.block(), this.timer()]).then(() => {});
+      return Promise.race([this.block(), this.timer()]).then(noOp);
     await this.block();
   }
 

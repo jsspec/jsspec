@@ -1,5 +1,5 @@
 'use strict';
-const {nonExecutor, pinger} = require('./spec_helper');
+const { nonExecutor, callTrace, noOp } = require('./spec_helper');
 
 describe('before and after', () => {
   context('are only run if there is an example', () => {
@@ -9,135 +9,93 @@ describe('before and after', () => {
 });
 
 describe('beforeEach', () => {
-  set('ping', pinger);
+  set('trace', callTrace);
 
-  describe('beforeEach call types', () => {
-    beforeEach('Named with option', {}, () => ping());
-    beforeEach('Named', () => ping());
-    beforeEach(() => ping());
-    it('all are called', () => expect(ping()).to.eql(4)); // 4th one is for the expectation
+  describe('call types and ordering', () => {
+    beforeEach('Named with option', {}, () => trace('a'));
+    beforeEach('Named', () => trace('b'));
+    beforeEach(() => trace('c'));
+
+    it('all are called in order, per example', () => expect(trace('y')).to.eq('abcy'));
+    it('all are called in order, per example', () => expect(trace('z')).to.eq('abcz'));
   });
 
-  describe('beforeEach call order', () => {
-    beforeEach('first', () => ping(100, true));
-    beforeEach('second', () => ping(5, true));
-    it('runs in order of definition', () => expect(ping(0)).to.eql(5));
-  });
-
-  describe('calling with no function to execute', () => {
+  describe('calling with no function', () => {
     try {
       beforeEach('what even is this');
-      it('should not execute this block', nonExecutor);
-    }catch (e) {
-      it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
+      it(nonExecutor);
+    }catch (error) {
+      it('throws', () => expect(error).to.be.an.instanceOf(TypeError));
     }
   });
 
   describe('calling from within an example', () => {
-    it('fails', () =>
-      expect(() =>
-        beforeEach('I should throw', nonExecutor)
-      ).to.throw(ReferenceError, 'example block (`beforeEach`) can not be defined inside another')
-    );
+    it('throws', () => expect(
+      () => beforeEach('called in executor', nonExecutor)
+    ).to.throw(ReferenceError, 'example block (`beforeEach`) can not be defined inside another'));
   });
 
-  describe('nested execution', () => {
-    beforeEach(() => ping());
+  describe('nesting', () => {
+    beforeEach(() => trace('d'));
 
-    context('one deep', () => {
-      it('executes', () => {
-        expect(ping()).to.eql(2);
-      });
+    describe('nested', () => {
+      beforeEach(() => trace('e'));
 
-      context('two deep', () => {
-        it('executes again - afresh', () =>{
-          expect(ping()).to.eql(2);
-        });
-      });
+      it('executes parents first', () => expect(trace()).to.eq('de'));
     });
 
-    context('parallel', () => {
-      it('executes again - afresh', () =>{
-        expect(ping()).to.eql(2);
-      });
-    });
+    describe('sibling contexts', () => {
+      it('does not execute the sibling\'s hook', () => expect(trace()).to.eq('d'));
+    })
   });
 });
 
-describe('after', () => {
-  set('ping', pinger);
+describe('afterEach', () => {
+  set('trace', callTrace);
+  set('expected', false);
 
-  describe('afterEach call types', () => {
-    it('block for afterEach test', () => {});
-    afterEach('Named with option', {}, () => ping());
-    afterEach('Named', () => ping());
-    afterEach(() => ping());
-    afterEach('All are called', () => expect(ping()).to.eql(4)); // 4th one is for the expectation
+  afterEach(() => expect(trace()).to.eq(expected));
+
+  describe('call types and ordering', () => {
+    afterEach('Named with option', {}, () => trace('f'));
+    afterEach('Named', () => trace('g'));
+    afterEach(() => trace('h'));
+
+    set('expected', '_fgh');
+    it('all are called in order, per example', () => {expected = 'yfgh'; trace('y');});
+    it('all are called in order, per example', () => {expected = 'zfgh'; trace('z');});
   });
 
-  describe('afterEach call order', () => {
-    it('block for afterEach test', () => {});
-    afterEach('first', () => ping(100, true));
-    afterEach('second', () => ping(5, true));
-    afterEach('runs in order of definition', () => expect(ping(0)).to.eql(5));
-  });
-
-  describe('calling with no function to execute', () => {
+  describe('calling with no function', () => {
+    set('expected', '');
     try {
       afterEach('what even is this');
-      it('should not execute this block', nonExecutor);
-    }catch (e) {
-      it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
+      it(noOp);
+    }catch (error) {
+      it('throws', () => expect(error).to.be.an.instanceOf(TypeError));
     }
   });
 
   describe('calling from within an example', () => {
-    it('fails', () =>
-      expect(() =>
-        afterEach('I should throw', nonExecutor)
-      ).to.throw(ReferenceError, 'example block (`afterEach`) can not be defined inside another')
-    );
+    set('expected', '');
+    it('throws', () => expect(
+      () => afterEach('called in executor', nonExecutor)
+    ).to.throw(ReferenceError, 'example block (`afterEach`) can not be defined inside another'));
   });
 
-  describe('nested execution', () => {
-    set('expected', 0);
-    afterEach('order is maintained', () => expect(ping(10)).to.eql(expected + 10));
-    afterEach(() => ping(0, true));
+  describe('nesting', () => {
+    beforeEach(() => trace('i'));
 
-    context('one deep', () => {
-      set('expected', 1);
-      it('block for after hook test', () => {});
+    describe('nested', () => {
+      set('expected', 'ijk');
+      beforeEach(() => trace('j'));
 
-      afterEach('executes last', () => {
-        expect(ping()).to.eql(expected);
-      });
-
-      context('two deep', () => {
-        set('expected', 2);
-        let executed = 0;
-
-        it('block for afterEach test', () => {});
-        it('block 2 for afterEach test', () => {});
-        afterEach(() => {
-          executed ++;
-          ping();
-        });
-
-        after('executes for each `it`', () => expect(executed).to.eql(2));
-      });
+      it('executes parents first', () => trace('k'));
     });
-  });
-});
 
-describe('after hook ends block execution', { random: false }, () => {
-  set('ping', pinger);
-
-  context('after hook runner', () => {
-    after(() => ping(100, true));
-    it('block for after hook test', () => {});
-  });
-
-  context('new block run', () => {
-    it('is a clean block', () => expect(ping()).to.eql(1));
+    describe('siblings', () => {
+      set('expected', 'il');
+      it('does not execute sibling\'s hook', () => trace('l'));
+    })
   });
 });

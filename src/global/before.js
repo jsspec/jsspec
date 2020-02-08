@@ -7,7 +7,7 @@ module.exports = {
   },
   instance: {
     addBeforeHook(example) {
-      if (this.executing) { throw ReferenceError('An example block (`before`) can not be defined inside another'); }
+      if (this.executing) { throw ReferenceError('A hook (`before`) can not be defined inside an example block'); }
       this.beforeHooks.push(example);
     },
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const {nonExecutor} = require('./spec_helper');
+const {nonExecutor, noOp} = require('./spec_helper');
 
 describe('shared examples', () => {
   let callCount = 0;
@@ -21,7 +21,7 @@ describe('shared examples', () => {
   context('with args', () => {
     sharedExamples('an example that takes args', {}, (object) => {
       object.sharedCalled = true;
-      it('caller does not need local tests for hooks to execute', () => {});
+      it('caller does not need local tests for hooks to execute', noOp);
     });
     describe('caller', () => {
       let localObject = {};
@@ -34,7 +34,7 @@ describe('shared examples', () => {
 
 describe('bad use of shared examples', () => {
   it('can not be called inside of an example', () => {
-    expect(() => sharedExamples('named', () => {})).to.throw(ReferenceError, 'A shared example can not be defined inside an example');
+    expect(() => sharedExamples('named', noOp)).to.throw(ReferenceError, 'A shared example can not be defined inside an example');
   });
 
   try {

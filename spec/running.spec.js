@@ -39,8 +39,8 @@ describe('running', function funThing() {
   });
 });
 
-xcontext('pending context');
-xdescribe('pending describe');
+xcontext('intentional pending context');
+xdescribe('intentional pending describe');
 
 describe('directly assigning to a `set` variable', () => {
   set('target', 1);

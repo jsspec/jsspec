@@ -21,7 +21,7 @@ describe('watched', () => {
               fs.writeFileSync('./watch_spec/bland.spec.js', ' ', { flag: 'a' });
               fs.writeFile('./watch_spec/bland2.spec.js', ' ', { flag: 'a' },
                 () => setTimeout(() => {
-                  if(resolve) resolve();
+                  if (resolve) resolve();
                   resolve = null;
                 }, 100)
               );
@@ -30,7 +30,7 @@ describe('watched', () => {
     })).then(() => new Promise(resolve => spawned.stdout.on('data', data => {
       if (resolve && data.toString().includes('does nothing')) {
         setTimeout(() => {
-          if(resolve) resolve();
+          if (resolve) resolve();
           resolve = null;
         }, 100);
       }
@@ -43,9 +43,10 @@ describe('watched', () => {
       });
     }));
   });
+
+  after(() => {
+    fs.writeFileSync('./watch_spec/bland.spec.js', fs.readFileSync('./watch_spec/bland.spec.js', 'utf-8').trim());
+    fs.writeFileSync('./watch_spec/bland2.spec.js', fs.readFileSync('./watch_spec/bland2.spec.js', 'utf-8').trim());
+  });
 });
 
-after(() => {
-  fs.writeFileSync('./watch_spec/bland.spec.js', fs.readFileSync('./watch_spec/bland.spec.js', 'utf-8').trim());
-  fs.writeFileSync('./watch_spec/bland2.spec.js', fs.readFileSync('./watch_spec/bland2.spec.js', 'utf-8').trim());
-});

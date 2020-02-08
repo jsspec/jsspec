@@ -2,19 +2,18 @@
 
 const nonExecutor = () => expect(false).to.be.true;
 
-try {
-  nonExecutor();
-}catch (_) { void(_); }
+try { nonExecutor(); }catch (_) { }
 
+const noOp = () => undefined;
 
-const pinger = () => {
-  let value = 0;
-  return (offset = 1, set = false) => {
-    if (set) value = offset;
-    else value += offset;
-    return value;
+const callTrace = () => {
+  let value = "";
+  return (key = '', clear = false) => {
+    if (clear ) value = '';
+    return value += key;
   };
 };
 
-exports.pinger = pinger;
+exports.noOp = noOp;
+exports.callTrace = callTrace;
 exports.nonExecutor = nonExecutor;

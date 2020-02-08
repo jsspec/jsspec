@@ -13,7 +13,7 @@ module.exports = {
   },
   instance: {
     addAfterHook(example) {
-      if (this.executing) { throw ReferenceError('An example block (`after`) can not be defined inside another'); }
+      if (this.executing) { throw ReferenceError('A hook (`after`) can not be defined inside an example block'); }
       this.afterHooks.push(example);
     },
 
@@ -34,7 +34,6 @@ module.exports = {
           }
         }
       }
-      if(this.parent) await this.parent.runAfterHooks();
 
       if (master) {
         this.endBlock();

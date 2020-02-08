@@ -1,6 +1,6 @@
 'use strict';
 
-const { nonExecutor } = require('./spec_helper');
+const { nonExecutor, noOp } = require('./spec_helper');
 
 describe('shared context', () => {
   let callCount = 0;
@@ -23,7 +23,7 @@ describe('shared context', () => {
   context('with args', () => {
     sharedContext('an example that takes args', {}, (object) => {
       object.sharedCalled = true;
-      it('caller does not need local tests for hooks to execute', () => {});
+      it('caller does not need local tests for hooks to execute', noOp);
     });
     describe('caller', () => {
       let localObject = {};
@@ -58,7 +58,7 @@ describe('shared context', () => {
 
 describe('bad use of shared context', () => {
   it('can not be called inside of an example', () => {
-    expect(() => sharedContext('named', () => {})).to.throw(ReferenceError, 'A shared context can not be defined inside an example');
+    expect(() => sharedContext('named', noOp)).to.throw(ReferenceError, 'A shared context can not be defined inside an example');
   });
 
   try {

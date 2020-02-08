@@ -1,6 +1,5 @@
 const path = require('path');
 
-
 const resolve = file => {
   try {
     return require.resolve(file, { paths: [process.cwd()] });
