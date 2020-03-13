@@ -2,6 +2,7 @@
 
 require('./filter_stack'); // needs to have 'original' stack prep stored
 const RunnerManager = require('./runner_manager');
+const WatchManager = require('./watch_manager');
 const Options = require('./options');
 
 class CLI {
@@ -13,7 +14,9 @@ class CLI {
     this.settings = options.settings;
     this.errors = options.errors;
 
-    this.manager = new RunnerManager(this.settings);
+    const Manager = this.settings.watch ? WatchManager : RunnerManager;
+    this.manager = new Manager(this.settings);
+
     this.reporter = new options.reporterClass(this.manager);
   }
   async run() {

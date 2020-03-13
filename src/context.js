@@ -1,6 +1,7 @@
 'use strict';
 
 const locator = require('./locator');
+const Rand = require('./utility/rand');
 
 let currentContext;
 let baseContext;
@@ -21,7 +22,7 @@ class Context {
       if (this.runIndex.length) {
         this.contextIndex = first;
       } else {
-        delete this.runIndex;
+        this.runIndex = null;
         this.exampleIndex = first;
       }
     }
@@ -75,9 +76,7 @@ class Context {
 
   async runChildren() {
     let selected = this.selectedContexts();
-    if (this.random) {
-      selected.sort(() => Math.random() - 0.5);
-    }
+    if (this.random) { selected.sort(Rand.randSort); }
     let count = 0;
     for (let i = 0; i < selected.length; i++) {
       currentContext = this.children[selected[i]];
@@ -109,20 +108,16 @@ class Context {
 
     let count = 0;
     let failed = false;
-
     baseContext.emitter.emit('contextStart', this);
     if (!this.constructor.name.startsWith('X')) {
-      if (this.random) {
-        selected.sort(() => Math.random() - 0.5);
-      }
+      if (this.random) { selected.sort(Rand.randSort); }
       for (let i = 0; i < selected.length; i++) {
         failed = await this.runExample(this.examples[selected[i]]) || failed;
       }
-
       count = await this.runChildren() + selected.length;
       if (count) await this.runAfterHooks();
     }
-    this.failed = failed;
+    this.failed = this.failed || failed;
     baseContext.emitter.emit('contextEnd', this);
     return count;}
 

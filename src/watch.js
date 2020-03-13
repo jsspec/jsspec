@@ -2,6 +2,7 @@
 
 const Runner = require('./runner');
 const resolve = require('./utility/resolve');
+const Rand = require('./utility/rand');
 
 const { addHook } = require('pirates');
 
@@ -16,6 +17,8 @@ const runner = async ({ settings, file, index }) => {
       return code;
     });
 
+  Rand.seed(settings.seed);
+
   if (settings.require) {
     settings.require = settings.require.filter(
       // this doesn't need the catch block as the
@@ -27,7 +30,13 @@ const runner = async ({ settings, file, index }) => {
   const runner = new Runner(settings, file, index);
   const failed = await runner.run(emitter);
 
-  process.exit(failed ? 1 : 0);
+  process.removeAllListeners();
+  process.emit({result: !failed });
 };
 
-process.on('message', runner);
+const handler = ({ kill, ...rest }) => {
+  if(kill) { return process.removeAllListeners(); }
+  runner(rest);
+};
+
+process.on('message', handler);

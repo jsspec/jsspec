@@ -29,8 +29,7 @@ class Runner {
     }catch (error) {
       this.errors.push(error);
       console.log('LOAD ERROR', error.stack || error);
-      return false;
-    }
+      return false;}
   }
 }
 
