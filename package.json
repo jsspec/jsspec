@@ -1,10 +1,10 @@
 {
   "name": "@jsspec/jsspec",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "JSSpec - contextualised test runner for javascript",
   "main": "index.js",
   "scripts": {
-    "test": "c8 jsspec -r chai/register-expect"
+    "test": "c8 ./bin/jsspec -r chai/register-expect"
   },
   "bin": "bin/jsspec",
   "repository": {
