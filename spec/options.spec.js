@@ -11,7 +11,7 @@ describe('Options', () => {
     set('args', () => [`-r=${required}`, '-Rf', 'd'].concat(specFiles));
 
     it('has no errors', () => expect(subject.errors).to.be.empty);
- 
+
     it('sets the reporter', () => {
       expect(subject.reporterClass).to.eql(Documentation);
     });
@@ -27,7 +27,7 @@ describe('Options', () => {
 
       it('has an error', () => expect(subject.errors).to.have.length(1));
     });
- 
+
     context('with a bad formatter', () => {
       set('format', 'not/a/file.js');
       set('args', () => [`-f=${format}`].concat(specFiles));
@@ -52,6 +52,14 @@ describe('Options', () => {
         expect(subject.require).to.have.ordered.members([required]);
         expect(subject.files).to.have.ordered.members(specFiles);
       });
+
+      context('with a seed', () => {
+        set('args', () => ['-s', '123']);
+
+        it('sets random on', () => {
+          expect(subject.random).to.be.true;
+        });
+      })
     });
   });
 });

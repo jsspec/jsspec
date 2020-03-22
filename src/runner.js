@@ -28,8 +28,9 @@ class Runner {
       return context.failed;
     }catch (error) {
       this.errors.push(error);
-      console.log('LOAD ERROR', error.stack || error);
-      return false;}
+      console.log('LOAD ERROR', error.stack /* c8 ignore next */|| error);
+      return false;
+    }
   }
 }
 

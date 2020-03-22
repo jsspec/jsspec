@@ -31,6 +31,7 @@ const awaitNoChange = () => {
   return new Promise(resolve => {
     let repeater = setInterval(() => {
       if (changed) {
+        /* c8 ignore next */
         changed = false;
       } else {
         clearInterval(repeater);

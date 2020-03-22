@@ -31,11 +31,12 @@ const runner = async ({ settings, file, index }) => {
   const failed = await runner.run(emitter);
 
   process.removeAllListeners();
-  process.emit({result: !failed });
+  process.emit({ result: !failed });
 };
 
 const handler = ({ kill, ...rest }) => {
-  if(kill) { return process.removeAllListeners(); }
+  /* c8 ignore next */
+  if (kill) { return process.removeAllListeners(); }
   runner(rest);
 };
 

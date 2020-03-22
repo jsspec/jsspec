@@ -5,7 +5,7 @@ const originalPrep = Error.prepareStackTrace;
 let previous;
 let preDepth;
 
-const wrapForWindows = file => file.replace(/\\/g,'\\\\')
+const wrapForWindows = file => file.replace(/\\/g,'\\\\');
 
 const prepareStackTraceModified = (error, stack) => {
   let modifiedStack = previous(error, stack);
@@ -19,7 +19,7 @@ const prepareStackTraceModified = (error, stack) => {
       const lineSupply = previousStackLine.match(new RegExp(`${wrapForWindows(fileName)}:(\\d+)`));
       return {
         fileName,
-        line: lineSupply ? parseInt(lineSupply[1]) : null
+        line: lineSupply ? parseInt(lineSupply[1]) /* c8 ignore next */: null
       };
     }
     os++;

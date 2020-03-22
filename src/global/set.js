@@ -81,10 +81,8 @@ module.exports = {
 
       let creatorOrValue = this.retrieveCreator(key);
       if (creatorOrValue instanceof Function &&
-        !( // a class isn't callable
-          creatorOrValue.hasOwnProperty('name') &&
-          creatorOrValue.toString().startsWith('class')
-        )
+        // a class isn't callable
+        !creatorOrValue.toString().startsWith('class')
       ) {
         return creatorOrValue();
       }

@@ -35,6 +35,7 @@ class WatchManager extends RunnerManager {
 
   forkSpec(name) {
     const runState = this.runState.get(name);
+    /* c8 ignore next 3 */
     if (runState.runner && runState.runner.connected) {
       runState.runner.send({ kill: true });
     }

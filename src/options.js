@@ -9,23 +9,22 @@ const jsSpecCLIOptions = {
   require: { alias: 'r', type: Array, required: false, default: [] },
   format: { alias: 'f', type: String, required: false, default: 'documentation' },
   timeout: { alias: 't', type: Number, required: false, default: 200 },
-  watch: { alias: 'w', type: Boolean, required: false, default: false},
+  watch: { alias: 'w', type: Boolean, required: false, default: false },
   files: { type: Array, required: false, default: ['spec/**/*.spec.js'] }
 };
 
 class JSSpecOptions {
-
   constructor(args) {
     this.options = new Options(args, jsSpecCLIOptions, 'files');
     this.settings = this.options.settings;
 
     if (this.settings.seed) { this.settings.random = true; }
-    else if (this.settings.random ) {this.settings.seed = looseSeed(); }
+    else if (this.settings.random) { this.settings.seed = looseSeed(); }
 
     this.errors = this.options.errors;
     try {
       this.reporterClass = formatters[this.options.settings.format] || require(resolve(this.options.settings.format));
-    }catch (error) {
+    } catch (error) {
       this.reporterClass = formatters.documentation;
       this.errors.push(error);
     }

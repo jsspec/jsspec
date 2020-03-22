@@ -13,7 +13,7 @@ describe('failures', () => {
   set('total', () => failures - contextLevelFailures);
 
   it('exits with a non-zero result', () => {
-    expect(spawned.status).to.be.a('number').and.not.eql(0);
+    expect(spawned.status).not.to.eql(0);
   });
 
   it('fails as expected', () => {
