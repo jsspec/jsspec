@@ -8,10 +8,7 @@ const noOp = () => undefined;
 
 const callTrace = () => {
   let value = "";
-  return (key = '', clear = false) => {
-    if (clear ) value = '';
-    return value += key;
-  };
+  return (key = '') => value += key;
 };
 
 exports.noOp = noOp;
