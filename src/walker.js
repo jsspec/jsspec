@@ -3,14 +3,34 @@
 const { Glob, hasMagic } = require('glob');
 const Rand = require('./utility/rand');
 
-let promiseHold = {};
+const promiseHold = {};
 
-const addAll = (collected, items = []) => new Set([...collected, ...items]);
-
-const getPromise = holder => new Promise(resolve => holder.resolve = (name) => {
-  holder.resolve = null;
+const getPromise = () => new Promise(resolve => promiseHold.resolve = (name) => {
+  promiseHold.resolve = null;
   resolve(name);
 });
+
+const resolveGlob = globOrFile => new Promise(resolve => new Glob(globOrFile, (_, matches) => resolve(matches)));
+
+class FileDetail {
+  static get re() { return /^(.*?)(?:\[(\d+(?::\d+)*)]|(?::(\d+)))?$/; }
+
+  constructor(exampleSelector) {
+    let [, name, runIndex, line] = exampleSelector.match(FileDetail.re);
+    this.runIndex = runIndex && runIndex.split(':').map(value => parseInt(value) - 1);
+    this.name = name;
+    this.line = line && parseInt(line);
+  }
+  get magic() {
+    return hasMagic(this.name);
+  }
+  get directed() {
+    return this.line || this.runIndex;
+  }
+}
+
+const nameToDetail = name => ({name});
+const uniqueDetails = names => Array.from(new Set(names.flat()), nameToDetail);
 
 class Walker {
   constructor(globOrFileList, random) {
@@ -18,34 +38,23 @@ class Walker {
     this.globList = [];
     this.fileList = [];
     globOrFileList.forEach(argName => {
-      // let name = argName;
-      let [, name, runIndex, line] = argName.match(/^(.*?)(?:\[(\d+(?::\d+)*)]|(?::(\d+)))?$/);
-      if (hasMagic(name)) {
+      const detailed = new FileDetail(argName);
+      if (detailed.magic) {
         return this.globList.push(argName);
       }
-      if (runIndex) {
-        this.fileList.push({ name, runIndex: runIndex.split(':').map(value => parseInt(value) - 1) });
-      } else if (line) {
-        this.fileList.push({ name, line: parseInt(line) });
-      } else {
-        this.fileList.push({ name });
-      }
+      this.fileList.push(detailed);
     });
-
-    this.globResults = [];
     this.responded = new Set();
     this.globs = [];
   }
+
   async prepareOrdered() {
-    this.prepared = true;
-    this.globResults = await Promise.all(this.globList.map(
-      globOrFile => new Promise(resolve => new Glob(globOrFile, (_, matches) => resolve(matches)))
-    )).then(results => results.reduce(addAll, []));
-    this.globResults = Array.from(this.globResults);
+    const globResults = await Promise.all(this.globList.map(resolveGlob))
+      .then(uniqueDetails);
+    this.fileList = [...this.fileList, ...globResults];
     this.globComplete = true;
   }
   prepareRandom() {
-    this.prepared = true;
     this.globs = this.globList.sort(Rand.randSort)
       .map(pattern => ({
         pattern,
@@ -54,17 +63,17 @@ class Walker {
       }));
     this.globs.forEach(globTracker => {
       globTracker.glob.on('end', () => {
+        globTracker.glob.removeAllListeners();
+
         globTracker.done = true;
         if (promiseHold.resolve && this.globs.every(({ done }) => done)) {
+          /* c8 ignore next 2 */
           promiseHold.resolve();
         }
-        globTracker.glob.removeAllListeners();
-      });
-
-      globTracker.glob.on('match', (match) => {
-        if (this.responded.has(match)) return;
-        if (promiseHold.resolve) promiseHold.resolve(match);
-        else this.globResults.push(match);
+      }).on('match', name => {
+        if (this.responded.has(name)) return;
+        if (promiseHold.resolve) promiseHold.resolve(name);
+        else this.fileList.push({ name });
       });
     });
   }
@@ -76,19 +85,10 @@ class Walker {
       const selected = this.fileList.splice(os, 1)[0];
 
       if (!this.responded.has(selected.name)) {
-        if (!(selected.runIndex || selected.line)) {
+        if (!selected.directed) {
           this.responded.add(selected.name); // we only track the ones we've run the whole file for
         }
         return selected;
-      }
-    }
-    // return one if we have it
-    while (this.globResults.length) {
-      os = this.random ? Rand.rand() % this.globResults.length : 0;
-      const name = this.globResults.splice(os, 1)[0];
-      if (!this.responded.has(name)) {
-        this.responded.add(name);
-        return { name };
       }
     }
     if (this.globComplete || this.globs.every(({ done }) => done)) return;
@@ -102,7 +102,7 @@ class Walker {
   }
 }
 
-async function* lister() {
+Walker.prototype.lister = async function* lister() {
   if (this.random) this.prepareRandom();
   else await this.prepareOrdered();
 
@@ -111,8 +111,6 @@ async function* lister() {
     if (!value) break;
     yield value;
   }
-}
-
-Walker.prototype.lister = lister;
+};
 
 module.exports = Walker;
