@@ -44,5 +44,7 @@ describe('failures', () => {
     expect(result).to.include('No shared example named \'a shared example that does not exist\' available in this context');
     expect(result).to.include('No shared context named \'a shared context that does not exist\' available in this context');
 
+    // subject assignment
+    expect(result).to.match(/LOAD ERROR (\{ )?ReferenceError: `subject` is assignable only inside an example block/);
   });
 });

@@ -8,14 +8,32 @@ let baseContext;
 
 const callOnMe = function(method) { method.call(this); };
 
+class RootContext {
+  get fullDescription() { return ''; }
+  index() { return []; }
+  get base() { return null; }
+  async runAfterEach() { }
+  async runBeforeHooks() { }
+  async runBeforeEach() { }
+  async runAfterHooks() { }
+  retrieveSubject() { throw ReferenceError('Subject is not defined in this context'); }
+  get executing() { return false; }
+  addChild() { }
+  setTreeExecution() { }
+  retrieveCreator(key) { throw ReferenceError(`\`${key}\` is not set in this context`); }
+  findSharedContext() { return null; }
+  findExamples() { return null; }
+}
+
+const rootContext = new RootContext();
+
 class Context {
-  constructor(description = '', options = {}, contextBlock, parent) {
-    if (parent) {
-      if (parent.executing) throw ReferenceError('A context block can not be defined inside an example');
-      parent.addChild(this);
-      this.parent = parent;
-    }
-    const { timeout, random, line, runIndex } = { timeout: 200, ...(parent || {}), ...options };
+  constructor(description = '', options = {}, contextBlock, parent = rootContext) {
+    if (parent.executing) throw ReferenceError('A context block can not be defined inside an example');
+    parent.addChild(this);
+    this.parent = parent;
+
+    const { timeout, random, line, runIndex } = { timeout: 200, ...parent, ...options };
     if (runIndex) {
       this.runIndex = [...runIndex];
       const first = this.runIndex.shift();
@@ -39,13 +57,11 @@ class Context {
   }
 
   get fullDescription() {
-    if (this.parent) return this.parent.fullDescription + ' ' + this.description;
-    return this.description;
+    return ' ' + `${this.parent.fullDescription} ${this.description}`.trim();
   }
 
   index(child) {
-    let index = [];
-    if (this.parent) { index = this.parent.index(this); }
+    let index = this.parent.index(this);
     if (child) index.push(this.children.indexOf(child));
     return index;
   }
@@ -145,9 +161,9 @@ class Context {
   }
 
   get base() {
-    if (this.parent) return this.parent.base;
-    return this.id;
+    return this.parent.base || this.id;
   }
+
   get emitter() {
     return baseContext._emitter;
   }
@@ -165,6 +181,9 @@ class Context {
 
   static get currentContext() {
     return currentContext;
+  }
+  static get executing() {
+    return currentContext.executing;
   }
 }
 

@@ -5,13 +5,12 @@ const Context = require('../context');
 class Describe extends Context {}
 
 module.exports = {
-  global(description, optionsOrBlock, block) {
-    if (block instanceof Function)
-      new Describe(description, optionsOrBlock, block, this.currentContext);
-    else if (optionsOrBlock instanceof Function)
-      new Describe(description, {}, optionsOrBlock, this.currentContext);
-    else
-      throw TypeError('`describe` must be provided with an executable block');
+  global(description, optionOrBlock, block) {
+    if (block instanceof Function) { /* noop */ }
+    else if (optionOrBlock instanceof Function) [optionOrBlock, block] = [{}, optionOrBlock];
+    else throw TypeError('`describe` must be provided with an executable block');
+
+    new Describe(description, optionOrBlock, block, this.currentContext);
   },
   Describe
 };

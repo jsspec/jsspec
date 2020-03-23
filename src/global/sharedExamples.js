@@ -7,24 +7,21 @@ module.exports = {
     this.sharedExamples = [];
   },
   instance: {
-    addSharedExamples(context){
-      if (this.executing) { throw ReferenceError('A shared example can not be defined inside an example'); }
+    addSharedExamples(context) {
       this.sharedExamples.push(context);
     },
     findExamples(requestedDescription) {
-      let context = this.sharedExamples.find(({description}) => description === requestedDescription);
-      if (!context && this.parent) {
-        context = this.parent.findExamples(requestedDescription);
-      }
-      return context;
+      return this.sharedExamples.find(({ description }) => description === requestedDescription) ||
+        this.parent.findExamples(requestedDescription);
     }
   },
   global(description, optionsOrBlock, block) {
-    if (block instanceof Function)
-      this.currentContext.addSharedExamples(new Context(description, optionsOrBlock, block));
-    else if (optionsOrBlock instanceof Function)
-      this.currentContext.addSharedExamples(new Context(description, {}, optionsOrBlock));
-    else
-      throw TypeError('A shared example must be provided with an executable block');
+    if (this.executing) { throw new ReferenceError('A shared example can not be defined inside an example'); }
+
+    if (block instanceof Function) { /* noop */ }
+    else if (optionsOrBlock instanceof Function) [optionsOrBlock, block] = [{}, optionsOrBlock];
+    else throw TypeError('A shared example must be provided with an executable block');
+
+    this.currentContext.addSharedExamples(new Context(description, optionsOrBlock, block));
   }
 };

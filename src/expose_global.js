@@ -47,25 +47,8 @@ const injector = name => {
       Context.prototype[key] = elements.instance[key];
     }
   }
-  if (elements.global instanceof Function) {
-    global[name] = elements.global.bind(Context);
-  } else if (elements.global) {
-    Object.defineProperty(global, name, {
-      configurable: true,
-      get() {
-        if(Context.currentContext.executing && elements.global.executeGet) {
-          return elements.global.executeGet.call(Context);
-        }
-        return elements.global.build.bind(Context);
-      },
-      set(value){
-        if(Context.currentContext.executing) {
-          return elements.global.executeSet.call(Context, value);
-        }
-        // else throw
-      }
-    });
-  }
+  if (elements.global instanceof Function) global[name] = elements.global.bind(Context);
+  else if (elements.global) Object.defineProperty(global, name, elements.global);
 };
 
 globals.forEach(injector);

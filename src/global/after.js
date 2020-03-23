@@ -13,43 +13,33 @@ module.exports = {
   },
   instance: {
     addAfterHook(example) {
-      if (this.executing) { throw ReferenceError('A hook (`after`) can not be defined inside an example block'); }
       this.afterHooks.push(example);
     },
 
-    runAfterHooks: async function() {
-      const master = !this.executing;
-      if (master) this.setTreeExecution(true);
+    runAfterHooks: async function () {
+      // after hooks do not run inside the example executor
+      this.startBlock();
 
-      for(let i=0; i< this.afterHooks.length; i++) {
+      for (let i = 0; i < this.afterHooks.length; i++) {
         const hook = this.afterHooks[i];
-        if (!hook.hasRun) {
-          try{
-            hook.hasRun = true;
-            await hook.run();
-          }catch(failure) {
-            filterStack(failure);
-            hook.failure = failure;
-            this.emitter.emit('contextLevelFailure', hook);
-          }
-        }
+
+        await hook.run().catch(failure => {
+          hook.failure = filterStack(failure);
+          this.emitter.emit('contextLevelFailure', hook);
+        });
       }
 
-      if (master) {
-        this.endBlock();
-        this.setTreeExecution(false);
-      }
+      this.endBlock();
     }
   },
-  global: {
-    build(description, optionOrBlock, block) {
-      if (block instanceof Function)
-        this.currentContext.addAfterHook(new AfterExample(description, 'after', optionOrBlock, block, this.currentContext));
-      else if (optionOrBlock instanceof Function)
-        this.currentContext.addAfterHook(new AfterExample(description, 'after', {}, optionOrBlock, this.currentContext));
-      else if ( description instanceof Function)
-        this.currentContext.addAfterHook(new AfterExample('after hook', 'after', {}, description, this.currentContext));
-      else throw TypeError('`after` must be provided an executable block');
-    }
+  global(description, optionOrBlock, block) {
+    if (this.executing) throw new ReferenceError('A hook (`after`) can not be defined inside an example block');
+
+    if (block instanceof Function) { /* noop */ }
+    else if (optionOrBlock instanceof Function) [optionOrBlock, block] = [{}, optionOrBlock];
+    else if (description instanceof Function) [description, optionOrBlock, block] = ['after hook', {}, description];
+    else throw TypeError('`after` must be provided an executable block');
+    this.currentContext.addAfterHook(new AfterExample(description, 'after', optionOrBlock, block, this.currentContext));
+
   }
 };

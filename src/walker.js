@@ -66,8 +66,8 @@ class Walker {
         globTracker.glob.removeAllListeners();
 
         globTracker.done = true;
+        /* c8 ignore next 3 */
         if (promiseHold.resolve && this.globs.every(({ done }) => done)) {
-          /* c8 ignore next 2 */
           promiseHold.resolve();
         }
       }).on('match', name => {

@@ -47,10 +47,6 @@ module.exports = {
   },
   instance: {
     addDefinition(key, valueOrCreator) {
-      if (this.executing) {
-        throw ReferenceError('Setting lazy evaluators within a running context is not permitted');
-      }
-
       if (typeof key !== 'string' && key !== null) {
         throw TypeError('Target for `set` must be a string');
       }
@@ -61,8 +57,6 @@ module.exports = {
 
     retrieveCreator(key) {
       if (this.values.has(key)) return this.values.get(key);
-      if (!this.parent) throw ReferenceError(`\`${key}\` is not set in this context`);
-
       return this.parent.retrieveCreator(key);
     },
 
@@ -70,8 +64,12 @@ module.exports = {
       clearGlobalKeys(filename);
     },
 
+    startBlock() {
+      this.setTreeExecution(true);
+    },
     endBlock() {
       clearGlobalValues();
+      this.setTreeExecution(false);
     },
 
     compute(key) {
@@ -90,6 +88,8 @@ module.exports = {
     }
   },
   global(key, value) {
+    if (this.executing) throw new ReferenceError('Setting lazy evaluators within a running context is not permitted');
+
     this.currentContext.addDefinition(key, value);
   }
 };

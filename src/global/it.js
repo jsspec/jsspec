@@ -9,8 +9,6 @@ module.exports = {
   },
   instance: {
     addExecutor(example) {
-      if (this.executing) { throw ReferenceError('An example block (`it`) can not be defined inside another'); }
-
       const beforeZeroIndex = [...this.index(), -1];
       const prev = this.examples[this.examples.length - 1] || { index: beforeZeroIndex };
       this.examples.push(example);
@@ -24,40 +22,36 @@ module.exports = {
 
     setTreeExecution(state) {
       this.executing = state;
-      if (this.parent) this.parent.setTreeExecution(state);
+      this.parent.setTreeExecution(state);
     },
 
-    async runExample(example) {
-      this.setTreeExecution(true);
-      let attemptEachAfterIfFailed = false;
-      try {
-        this.emitter.emit('exampleStart', example);
-        await this.runBeforeHooks();
-        await this.runBeforeEach();
-        attemptEachAfterIfFailed = true;
-        await example.run();
-        attemptEachAfterIfFailed = false;
-        await this.runAfterEach();
-      } catch (e) {
-        filterStack(e);
-        example.failure = e;
-        if (attemptEachAfterIfFailed) {
-          await this.runAfterEach().catch(noOp);
-        }
+    async hookedExample(example) {
+      const storeFailure = error => example.failure = example.failure || filterStack(error);
+
+      await this.runBeforeEach().catch(storeFailure);
+      if (!example.failure) {
+        await example.run().catch(storeFailure);
+        await this.runAfterEach().catch(storeFailure);
       }
+    },
+    async runExample(example) {
+      this.startBlock();
+      this.emitter.emit('exampleStart', example);
+      await this.runBeforeHooks().catch(error => example.failure = filterStack(error));
+      await this.hookedExample(example);
+
       this.emitter.emit('exampleEnd', example);
       this.endBlock();
-      this.setTreeExecution(false);
       return !!example.failure;
     }
   },
-  global: {
-    build(description, optionOrBlock, block) {
-      if (block instanceof Function)
-        this.currentContext.addExecutor(new Example(description, 'it', optionOrBlock, block, this.currentContext));
-      else if (optionOrBlock instanceof Function)
-        this.currentContext.addExecutor(new Example(description, 'it', {}, optionOrBlock, this.currentContext));
-      else throw TypeError('`it` must be provided an executable block');
-    }
+  global(description, optionOrBlock, block) {
+    if (this.executing) throw new ReferenceError('An example block (`it`) can not be defined inside another');
+
+    if (block instanceof Function) { /* noop */ }
+    else if (optionOrBlock instanceof Function) [optionOrBlock, block] = [{}, optionOrBlock];
+    else throw TypeError('`it` must be provided an executable block');
+
+    this.currentContext.addExecutor(new Example(description, 'it', optionOrBlock, block, this.currentContext));
   }
 };

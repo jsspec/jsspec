@@ -1,5 +1,7 @@
 'use strict';
 
+const Context = require('../context');
+
 const UNSET = Symbol.for('unset');
 
 const settings = {
@@ -13,27 +15,27 @@ const settings = {
     },
 
     retrieveSubject() {
-      if (this.subject === UNSET) {
-        if (this.parent) return this.parent.retrieveSubject();
-
-        throw ReferenceError('Subject is not defined in this context');
-      }
+      if (this.subject === UNSET) return this.parent.retrieveSubject();
       if (this.subject) return global[this.subject];
       return this.compute(null);
     }
   },
   global: {
-    build(...args) {
-      if (args.length > 1)
-        return this.currentContext.setSubject(...args);
-      return this.currentContext.setSubject(null, ...args);
+    configurable: false,
+    get() {
+      const context = Context.currentContext;
+      if(context.executing) {
+        if ('subjectValue' in context) return context.subjectValue;
+        return context.subjectValue = context.retrieveSubject();
+      }
+      return (...args) => args.length > 1 ?
+        context.setSubject(...args) :
+        context.setSubject(null, ...args);
     },
-    executeGet() {
-      if ('subjectValue' in this.currentContext) return this.currentContext.subjectValue;
-      return this.currentContext.subjectValue = this.currentContext.retrieveSubject();
-    },
-    executeSet(value) {
-      return this.currentContext.subjectValue = value;
+    set(value){
+      if(Context.executing) return Context.currentContext.subjectValue = value;
+
+      throw new ReferenceError('`subject` is assignable only inside an example block');
     }
   }
 };

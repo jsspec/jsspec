@@ -41,7 +41,7 @@ class Example {
     return this.context.base;
   }
   get fullDescription() {
-    return this.context.fullDescription + ' ' + this.description;
+    return `${this.context.fullDescription} ${this.description}`;
   }
 
   get location() {

@@ -6,7 +6,6 @@ module.exports = {
   },
   instance: {
     addAfterEach(example) {
-      if (this.executing) { throw ReferenceError('An example block (`afterEach`) can not be defined inside another'); }
       this.afterEach.push(example);
     },
 
@@ -14,18 +13,17 @@ module.exports = {
       for(let i=0; i< this.afterEach.length; i++) {
         await this.afterEach[i].run();
       }
-      if(this.parent) await this.parent.runAfterEach();
+      await this.parent.runAfterEach();
     }
   },
-  global: {
-    build(description, optionOrBlock, block) {
-      if (block instanceof Function)
-        this.currentContext.addAfterEach(new Example(description, 'afterEach', optionOrBlock, block, this.currentContext));
-      else if (optionOrBlock instanceof Function)
-        this.currentContext.addAfterEach(new Example(description, 'afterEach', {}, optionOrBlock, this.currentContext));
-      else if ( description instanceof Function)
-        this.currentContext.addAfterEach(new Example('', 'afterEach', {}, description, this.currentContext));
-      else throw TypeError('`afterEach` must be provided an executable block');
-    }
+  global(description, optionOrBlock, block) {
+    if (this.executing) throw new ReferenceError('An example block (`afterEach`) can not be defined inside another');
+
+    if (block instanceof Function) { /* noop */ }
+    else if (optionOrBlock instanceof Function) [optionOrBlock, block] = [{}, optionOrBlock];
+    else if ( description instanceof Function) [description, optionOrBlock, block] = ['', {}, description];
+    else throw TypeError('`afterEach` must be provided an executable block');
+
+    this.currentContext.addAfterEach(new Example(description, 'afterEach', optionOrBlock, block, this.currentContext));
   }
 };

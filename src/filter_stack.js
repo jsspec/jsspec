@@ -61,4 +61,6 @@ module.exports = error => {
 
   Error.stackTraceLimit = errorDepth;
   Error.prepareStackTrace = previous;
+
+  return error;
 };
