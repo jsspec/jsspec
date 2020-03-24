@@ -30,7 +30,12 @@ class FileDetail {
 }
 
 const nameToDetail = name => ({name});
-const uniqueDetails = names => Array.from(new Set(names.flat()), nameToDetail);
+
+const addAll = (collected, items = []) => [...collected, ...items];
+const flat = results => results.reduce(addAll, []);
+
+const uniqueDetails = names => Array.from(new Set(flat(names)), nameToDetail);
+
 
 class Walker {
   constructor(globOrFileList, random) {

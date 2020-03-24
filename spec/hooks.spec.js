@@ -1,6 +1,6 @@
 'use strict';
-const { nonExecutor, callTrace, noOp } = require('./spec_helper');
 
+const { nonExecutor, callTrace, noOp } = require('./spec_helper');
 
 describe('hooks', () => {
   context('hooks only run if there is an example', () => {
