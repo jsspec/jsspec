@@ -23,6 +23,7 @@ class RootContext {
   retrieveCreator(key) { throw ReferenceError(`\`${key}\` is not set in this context`); }
   findSharedContext() { return null; }
   findExamples() { return null; }
+  wrapAroundEach(example) { return example; }
 }
 
 const rootContext = new RootContext();
