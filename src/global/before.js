@@ -13,10 +13,14 @@ module.exports = {
     runBeforeHooks: async function() {
       await this.parent.runBeforeHooks();
 
+      let hook;
+      const handleError = error => hook.error = filterStack(error);
+
       for(let i=0; i< this.beforeHooks.length; i++) {
-        const hook = this.beforeHooks[i];
+        hook = this.beforeHooks[i];
+
         if (!hook.hasRun) {
-          await hook.run().catch(error => hook.error = filterStack(error));
+          await hook.run().catch(handleError);
           hook.hasRun = true;
         }
 

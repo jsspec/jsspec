@@ -27,8 +27,8 @@ const runner = async ({ settings, file, index }) => {
       requestedModule => require(resolve(requestedModule))
     );
   }
-  const runner = new Runner(settings, file, index);
-  const failed = await runner.run(emitter);
+  const trueRunner = new Runner(settings, file, index);
+  const failed = await trueRunner.run(emitter);
 
   process.removeAllListeners();
   process.emit({ result: !failed });

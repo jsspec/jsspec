@@ -51,11 +51,12 @@ describe('Rand', () => {
       return results;
     });
 
+    beforeEach(() => initialRun);
+
     context('when seeded with the same value', () => {
       set('secondSeed', 42);
 
       it('enables a repeatable sequence', () => {
-        initialRun;
         Rand.seed(secondSeed);
         expect(initialRun.every(previous => previous === Rand.rand())).to.be.true;
       });
@@ -65,7 +66,6 @@ describe('Rand', () => {
       set('secondSeed', 43);
 
       it('is a different sequence', () => {
-        initialRun;
         Rand.seed(secondSeed);
         expect(initialRun.every(previous => previous != Rand.rand())).to.be.true;
       });

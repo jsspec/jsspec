@@ -29,7 +29,7 @@ class RootContext {
 const rootContext = new RootContext();
 
 class Context {
-  constructor(description = '', options = {}, contextBlock, parent = rootContext) {
+  constructor(description = '', options = {}, contextBlock = null, parent = rootContext) {
     if (parent.executing) throw ReferenceError('A context block can not be defined inside an example');
     parent.addChild(this);
     this.parent = parent;

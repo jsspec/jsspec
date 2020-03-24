@@ -60,8 +60,8 @@ module.exports = {
       return this.parent.retrieveCreator(key);
     },
 
-    reset(filename) {
-      clearGlobalKeys(filename);
+    reset() {
+      clearGlobalKeys();
     },
 
     startBlock() {

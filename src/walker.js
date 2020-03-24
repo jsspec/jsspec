@@ -100,7 +100,7 @@ class Walker {
 
     // wait for one - responded test is done in event handler
     // guaranteed to be unique here.
-    const name = await getPromise(promiseHold);
+    const name = await getPromise();
 
     this.responded.add(name);
     if (name) return { name };

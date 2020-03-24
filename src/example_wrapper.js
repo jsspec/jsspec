@@ -16,14 +16,14 @@ class ExampleWrapper extends Example {
     const runner = this.block();
     let partial = runner.next();
     await this.child.run();
-    if (!partial.done) { partial = runner.next(); }
+    if (!partial.done) { runner.next(); }
   }
 
   async runAsyncGenerator() {
     const runner = this.block();
     let partial = await runner.next();
     await this.child.run();
-    if (!partial.done) { partial = await runner.next(); }
+    if (!partial.done) { await runner.next(); }
   }
 
   async run() {

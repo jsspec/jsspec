@@ -20,13 +20,16 @@ module.exports = {
       // after hooks do not run inside the example executor
       this.startBlock();
 
-      for (let i = 0; i < this.afterHooks.length; i++) {
-        const hook = this.afterHooks[i];
+      let hook;
+      const handleError = failure => {
+        hook.failure = filterStack(failure);
+        this.emitter.emit('contextLevelFailure', hook);
+      };
 
-        await hook.run().catch(failure => {
-          hook.failure = filterStack(failure);
-          this.emitter.emit('contextLevelFailure', hook);
-        });
+      for (let i = 0; i < this.afterHooks.length; i++) {
+        hook = this.afterHooks[i];
+
+        await hook.run().catch(handleError);
       }
 
       this.endBlock();
