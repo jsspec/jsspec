@@ -1,10 +1,8 @@
 'use strict';
 
-const { expect } = require('chai');
-
-describe('timeout', {timeout: 200}, () => {
+describe('timeout', {timeout: 20}, () => {
   it('times out', () => {
-    return new Promise(resolve => setTimeout(resolve, 300));
+    return new Promise(resolve => setTimeout(resolve, 100));
   });
 });
 

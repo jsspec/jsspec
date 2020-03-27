@@ -13,7 +13,7 @@ describe('Walker', () => {
       set('list', ['file:17']);
 
       it('adds a file with a line', () => {
-        expect(subject.fileList[0]).to.include({ line: 17 });
+        expect(subject.fileList[0]).to.include({ runLine: 17 });
       });
     });
 

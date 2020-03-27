@@ -33,9 +33,10 @@ const settings = {
         context.setSubject(null, ...args);
     },
     set(value){
-      if(Context.executing) return Context.currentContext.subjectValue = value;
-
-      throw new ReferenceError('`subject` is assignable only inside an example block');
+      const context = Context.currentContext;
+      if(Context.executing) return context.subjectValue = value;
+      context.failure = new ReferenceError('`subject` is assignable only inside an example block');
+      context.emitter.emit('contextLevelFailure', context);
     }
   }
 };

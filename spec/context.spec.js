@@ -10,13 +10,21 @@ describe('Context', () => {
   subject('testContext', () => new Context(description, options, block));
 
   beforeEach(() => {
+    testContext._location = { line: 4 };
     testContext.children = [{ _location: { line: 5 } }, { _location: { line: 10 } }];
     testContext.examples = [{ line: 6 },{ line: 12, index: [1] }];
   });
 
   describe('sub context selection', () => {
+    context('with the exact line set', () => {
+      set('options', { runLine: 4 });
+
+      it('selects all children', () => {
+        expect(subject.selectedContexts()).to.eql(['0', '1']);
+      });
+    });
     context('with a line set', () => {
-      set('options', { line: 6 });
+      set('options', { runLine: 6 });
 
       it('selects the last child with a line lower than `line`', () => {
         expect(subject.selectedContexts()).to.eql([0]);
@@ -57,8 +65,15 @@ describe('Context', () => {
   });
 
   describe('example selection', () => {
+    context('with the parent context selected', () => {
+      set('options', { runLine: 4 });
+
+      it('selects all children', () => {
+        expect(subject.selectedExamples()).to.eql(["0", "1"]);
+      });
+    })
     context('with a line set', () => {
-      set('options', { line: 6 });
+      set('options', { runLine: 6 });
 
       it('selects the example on that line', () => {
         expect(subject.selectedExamples()).to.eql([0]);
@@ -100,6 +115,7 @@ describe('Context', () => {
         'id',
         'description',
         'fullDescription',
+        'location',
         'kind',
         'base',
         'failure'

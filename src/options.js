@@ -28,7 +28,6 @@ class JSSpecOptions {
       this.reporterClass = formatters.documentation;
       this.errors.push(error);
     }
-
     this.options.settings.require = this.options.settings.require.filter(
       requestedModule => {
         try {

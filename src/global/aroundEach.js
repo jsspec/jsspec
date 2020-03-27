@@ -1,4 +1,3 @@
-const filterStack = require('../filter_stack');
 const ExampleWrapper = require('../example_wrapper');
 
 module.exports = {
@@ -18,7 +17,7 @@ module.exports = {
     hookedExample(example) {
       return {
         run: async () => {
-          const storeFailure = error => example.failure = example.failure || filterStack(error);
+          const storeFailure = error => example.failure || (example.failure = error);
 
           await this.runBeforeEach().catch(storeFailure);
           if (!example.failure) {
@@ -31,8 +30,9 @@ module.exports = {
 
     runAroundEach: async function(example) {
       let wrapped = this.wrapAroundEach(this.hookedExample(example));
+      const storeFailure = error => example.failure || (example.failure = error);
 
-      await wrapped.run().catch(error => example.failure = example.failure || filterStack(error));
+      await wrapped.run().catch(storeFailure);
     }
   },
   global(description, optionOrBlock, block) {

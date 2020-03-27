@@ -1,4 +1,3 @@
-const filterStack = require('../filter_stack');
 const Example = require('../example');
 
 module.exports = {
@@ -14,7 +13,7 @@ module.exports = {
       await this.parent.runBeforeHooks();
 
       let hook;
-      const handleError = error => hook.error = filterStack(error);
+      const handleError = error => hook.error = error;
 
       for(let i=0; i< this.beforeHooks.length; i++) {
         hook = this.beforeHooks[i];

@@ -1,5 +1,4 @@
 const Example = require('../example');
-const filterStack = require('../filter_stack');
 
 module.exports = {
   initialise() {
@@ -25,7 +24,9 @@ module.exports = {
     async runExample(example) {
       this.startBlock();
       this.emitter.emit('exampleStart', example);
-      await this.runBeforeHooks().catch(error => example.failure = filterStack(error));
+      const storeFailure = error => example.failure = error;
+
+      await this.runBeforeHooks().catch(storeFailure);
       if (!example.failure) await this.runAroundEach(example);
 
       this.emitter.emit('exampleEnd', example);

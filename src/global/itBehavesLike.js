@@ -11,7 +11,7 @@ module.exports = {
     const sharedExampleContext = this.currentContext.findExamples(sharedExamplesName);
 
     if (!sharedExampleContext) {
-      this.currentContext.failure = ReferenceError(`No shared example named '${sharedExamplesName}' available in this context`);
+      this.currentContext.failure = new ReferenceError(`No shared example named '${sharedExamplesName}' available in this context`);
       this.currentContext.emitter.emit('contextLevelFailure', this.currentContext);
       return;
     }

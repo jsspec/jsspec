@@ -2,14 +2,14 @@
 
 const cp = require('child_process');
 
-const absolute = require('path').join(process.cwd(), 'fail_spec/bad_format.spec.js');
-let spawned = cp.spawnSync(process.argv[0], ['./bin/jsspec', '-r', 'not/a/file.js', absolute, '-RR', './fail_spec/*.spec.js', './fail_spec/not.a.file.js', absolute], { stdio: 'pipe' });
+const absolute = require('path').join(process.cwd(), 'fail_spec/ok.spec.js');
+let spawned = cp.spawnSync(process.argv[0], ['./bin/jsspec', '-r', 'chai/register-expect', 'not/a/file.js', '-RR', './fail_spec/*.spec.js', './fail_spec/not.a.file.js', absolute], { stdio: 'pipe' });
 
 let result = spawned.stdout.toString();
 
 describe('failures', () => {
-  set('failures', 8);
-  set('contextLevelFailures', 2);
+  set('failures', 11);
+  set('contextLevelFailures', 4);
   set('total', () => failures - contextLevelFailures);
 
   it('exits with a non-zero result', () => {
@@ -20,12 +20,12 @@ describe('failures', () => {
     expect(result).to.include(`${total} examples, ${failures} failures`);
     // timeout
     expect(result).to.match(/\d+\) timeout times out/);
-    expect(result).to.match(/example timeout \(200ms\) exceeded/);
+    expect(result).to.match(/example timeout \(20ms\) exceeded/);
 
     // missing file
-    expect(result).to.match(/LOAD ERROR (\{ )?Error: Cannot find module.*not\.a\.file\.js/);
+    expect(result).to.match(/\[Load Error\]\n.*(\{ )?Error: Cannot find module.*not\.a\.file\.js/);
     // bad file
-    expect(result).to.match(/LOAD ERROR (\{ )?TypeError: Assignment to constant variable./);
+    expect(result).to.match(/\[Load Error\]\n.*(\{ )?TypeError: Assignment to constant variable./);
     // failure in before hook
     expect(result).to.match(/\d+\) before hook fails on the initial call/);
     expect(result).to.match(/\d+\) before hook at depth fails further calls/);
@@ -45,6 +45,6 @@ describe('failures', () => {
     expect(result).to.include('No shared context named \'a shared context that does not exist\' available in this context');
 
     // subject assignment
-    expect(result).to.match(/LOAD ERROR (\{ )?ReferenceError: `subject` is assignable only inside an example block/);
+    expect(result).to.match(/ReferenceError: `subject` is assignable only inside an example block/);
   });
 });

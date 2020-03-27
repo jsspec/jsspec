@@ -1,6 +1,8 @@
 'use strict';
 
 const locator = require('./locator');
+const filterStack = require('./filter_stack');
+
 const noOp = () => undefined;
 
 class AssertionError extends Error {}
@@ -16,12 +18,22 @@ class Example {
     this.context = context;
 
     this._location = locator.location;
+    this.timeoutError = new AssertionError(`example timeout (${this.timeout}ms) exceeded`);
+  }
+
+  set failure(error) {
+    this._failure = filterStack(error);
+  }
+
+  get failure() {
+    return this._failure;
   }
 
   toJSON() {
     return {
       description: this.description,
       fullDescription: this.fullDescription,
+      location: this.location,
       kind: this.kind,
       base: this.base,
       timeout: this.timeout,
@@ -41,7 +53,7 @@ class Example {
     return this.context.base;
   }
   get fullDescription() {
-    return `${this.context.fullDescription} ${this.description}`;
+    return `${this.context.fullDescription} ${this.description}`.trimStart();
   }
 
   get location() {
@@ -52,7 +64,8 @@ class Example {
   }
 
   get unIndexedLocation() {
-    return this._location.fileName + ':' + this.line;
+    if (this._location && this._location.fileName) return this._location.fileName + ':' + this.line;
+    return '';
   }
 
   get line() {
@@ -60,13 +73,12 @@ class Example {
   }
 
   async run() {
-    if (this.timeout > 0)
-      return Promise.race([this.block(), this.timer()]).then(noOp);
+    if (this.timeout > 0) return Promise.race([this.block(), this.timer()]).then(noOp);
     await this.block();
   }
 
   timer() {
-    return new Promise((_, reject) => setTimeout(() => reject(new AssertionError(`example timeout (${this.timeout}ms) exceeded`)), this.timeout));
+    return new Promise((_, reject) => setTimeout(() => reject(this.timeoutError), this.timeout));
   }
 }
 

@@ -42,6 +42,7 @@ describe('Example', () => {
         'description',
         'fullDescription',
         'kind',
+        'location',
         'base',
         'timeout',
         'failure'

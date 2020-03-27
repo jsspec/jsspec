@@ -16,16 +16,16 @@ class FileDetail {
   static get re() { return /^(.*?)(?:\[(\d+(?::\d+)*)]|(?::(\d+)))?$/; }
 
   constructor(exampleSelector) {
-    let [, name, runIndex, line] = exampleSelector.match(FileDetail.re);
+    let [, name, runIndex, runLine] = exampleSelector.match(FileDetail.re);
     this.runIndex = runIndex && runIndex.split(':').map(value => parseInt(value) - 1);
     this.name = name;
-    this.line = line && parseInt(line);
+    this.runLine = runLine && parseInt(runLine);
   }
   get magic() {
     return hasMagic(this.name);
   }
   get directed() {
-    return this.line || this.runIndex;
+    return this.runLine || this.runIndex;
   }
 }
 

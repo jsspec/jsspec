@@ -2,11 +2,12 @@
 
 const locator = require('./locator');
 const Rand = require('./utility/rand');
+const filterStack = require('./filter_stack');
 
 let currentContext;
 let baseContext;
 
-const callOnMe = function(method) { method.call(this); };
+const callOnMe = function (method) { method.call(this); };
 
 class RootContext {
   get fullDescription() { return ''; }
@@ -34,7 +35,7 @@ class Context {
     parent.addChild(this);
     this.parent = parent;
 
-    const { timeout, random, line, runIndex } = { timeout: 200, ...parent, ...options };
+    const { timeout, random, runLine, runIndex } = { timeout: 200, ...parent, ...options };
     if (runIndex) {
       this.runIndex = [...runIndex];
       const first = this.runIndex.shift();
@@ -47,7 +48,7 @@ class Context {
     }
     this._location = locator.location;
 
-    this.line = line;
+    this.runLine = runLine;
     this.timeout = timeout;
     this.random = random;
     this.description = description;
@@ -57,8 +58,17 @@ class Context {
     Context.initialisers.map(callOnMe, this);
   }
 
+  get location() {
+    if (this._location && this._location.fileName) return this._location.fileName + ':' + this.line;
+    return '';
+  }
+
+  get line() {
+    return this._location.line;
+  }
+
   get fullDescription() {
-    return ' ' + `${this.parent.fullDescription} ${this.description}`.trim();
+    return `${this.parent.fullDescription} ${this.description}`.trimStart();
   }
 
   index(child) {
@@ -73,12 +83,17 @@ class Context {
 
   selectedContexts() {
     let selected;
-    if (this.line) {
-      let i = this.children.length;
-      while (i--) {
-        if (this.children[i]._location.line <= this.line) break;
+    if (this.runLine) {
+      if (this.runLine === this._location.line) {
+        selected = Object.keys(this.children);
       }
-      selected = [i];
+      else {
+        let i = this.children.length;
+        while (i--) {
+          if (this.children[i]._location.line <= this.runLine) break;
+        }
+        selected = [i];
+      }
     } else if ('contextIndex' in this) {
       selected = [this.contextIndex];
     } else if ('exampleIndex' in this) {
@@ -101,14 +116,20 @@ class Context {
       this.failed = this.failed || currentContext.failed;
     }
     currentContext = this;
-    return count;}
+    return count;
+  }
 
   selectedExamples() {
     let selected;
+
     if ('contextIndex' in this) {
       selected = []; // need to go deeper
-    } else if (this.line) {
-      selected = [this.examples.findIndex(({ line }) => line === this.line)];
+    } else if (this.runLine) {
+      if (this.runLine == this._location.line) {
+        selected = Object.keys(this.examples);
+      } else {
+        selected = [this.examples.findIndex(({ line }) => line === this.runLine)];
+      }
     } else if ('exampleIndex' in this) {
       // this has to be an indexed example
       selected = [this.examples.findIndex(({ index }) => index && this.exampleIndex === index[index.length - 1])];
@@ -126,6 +147,12 @@ class Context {
     let count = 0;
     let failed = false;
     baseContext.emitter.emit('contextStart', this);
+    if (this.failure) {
+      this.failed = true;
+      baseContext.emitter.emit('contextEnd', this);
+      return 0;
+    }
+
     if (!this.constructor.name.startsWith('X')) {
       if (this.random) { selected.sort(Rand.randSort); }
       for (let i = 0; i < selected.length; i++) {
@@ -136,10 +163,19 @@ class Context {
     }
     this.failed = this.failed || failed;
     baseContext.emitter.emit('contextEnd', this);
-    return count;}
+    return count;
+  }
 
   get kind() {
     return this.constructor.name;
+  }
+
+  set failure(error) {
+    this._failure = filterStack(error);
+  }
+
+  get failure() {
+    return this._failure;
   }
 
   toJSON() {
@@ -149,6 +185,7 @@ class Context {
       fullDescription: this.fullDescription,
       kind: this.kind,
       base: this.base,
+      location: this.location,
       failure: this.failure && {
         constructor: {
           name: this.failure.constructor.name

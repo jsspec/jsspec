@@ -17,20 +17,21 @@ class Runner {
     this.errors = [];
   }
   async run(emitter) {
+    const key = `__${this.index}`;
+    const context = Context.begin(emitter, key, { ...this.file, ...this.settings });
+    emitter.emit('fileStart', key, this.file.name);
     try {
-      const key = `__${this.index}`;
-      const context = Context.begin(emitter, key, { ...this.file, ...this.settings });
       require(this.file.name);
-      emitter.emit('fileStart', key);
       await context.runChildren();
-      emitter.emit('fileEnd', key, this.file.originalName);
-      context.reset();
-      return context.failed;
     }catch (error) {
-      this.errors.push(error);
-      console.log('LOAD ERROR', error.stack /* c8 ignore next */|| error);
-      return false;
+      context.failed = true;
+      context.failure = error;
+      context.description = '[Load Error]';
+      emitter.emit('contextLevelFailure', context);
     }
+    emitter.emit('fileEnd', key, this.file.originalName);
+    context.reset();
+    return context.failed;
   }
 }
 

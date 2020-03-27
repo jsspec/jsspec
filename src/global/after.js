@@ -1,9 +1,8 @@
-const filterStack = require('../filter_stack');
 const Example = require('../example');
 
 class AfterExample extends Example {
   get fullDescription() {
-    return ' [In after hook]' + super.fullDescription;
+    return `[In after hook] ${super.fullDescription}`;
   }
 }
 
@@ -22,7 +21,7 @@ module.exports = {
 
       let hook;
       const handleError = failure => {
-        hook.failure = filterStack(failure);
+        hook.failure = failure;
         this.emitter.emit('contextLevelFailure', hook);
       };
 

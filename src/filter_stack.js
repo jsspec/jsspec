@@ -19,6 +19,7 @@ const stackFrameIndices = stack => {
     }
     os++;
   }
+  if (result.length === 0 && stack.length > 0) result.push(0);
   return result;
 };
 
@@ -42,7 +43,6 @@ const prepareStackTraceModified = (error, stack) => {
 
 const prepareStackTraceNice = (error, stack) => {
   if (process.env.DEBUG) return [error, ...stack].join('\n    at ');
-
   const frameIndexes = stackFrameIndices(stack);
 
   return [
