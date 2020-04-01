@@ -1,5 +1,5 @@
 # JSSPEC
-[![npm (scoped)](https://img.shields.io/npm/v/@jsspec/jsspec?style=for-the-badge)](https://www.npmjs.com/package/@jsspec/jsspec)
+[![npm (scoped)](https://img.shields.io/npm/v/@jsspec/jsspec?logo=npm&style=for-the-badge)](https://www.npmjs.com/package/@jsspec/jsspec)
 [![Travis](https://img.shields.io/travis/jsspec/jsspec/master.svg?logo=travis&style=for-the-badge)](https://travis-ci.org/jsspec/jsspec)
 [![AppVeyor](https://img.shields.io/appveyor/ci/HookyQR/jsspec/master.svg?logo=appveyor&style=for-the-badge)](https://ci.appveyor.com/project/HookyQR/jsspec)
 
