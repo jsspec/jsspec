@@ -1,3 +1,6 @@
+### 0.2.1
+* Add changes for reporting improvements
+
 ### 0.2.0
 * Add aroundEach hook
 
