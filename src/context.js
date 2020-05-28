@@ -2,7 +2,6 @@
 
 const locator = require('./locator');
 const Rand = require('./utility/rand');
-const filterStack = require('./filter_stack');
 
 let currentContext;
 let baseContext;
@@ -171,7 +170,7 @@ class Context {
   }
 
   set failure(error) {
-    this._failure = filterStack(error);
+    this._failure = error;
   }
 
   get failure() {

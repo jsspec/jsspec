@@ -1,8 +1,7 @@
 'use strict';
 
+/* c8 ignore next */
 const nonExecutor = () => expect(false).to.be.true;
-
-try { nonExecutor(); }catch (_) { }
 
 const noOp = () => undefined;
 
@@ -11,6 +10,4 @@ const callTrace = () => {
   return (key = '') => value += key;
 };
 
-exports.noOp = noOp;
-exports.callTrace = callTrace;
-exports.nonExecutor = nonExecutor;
+module.exports = { noOp, callTrace, nonExecutor };

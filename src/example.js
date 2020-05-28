@@ -1,15 +1,14 @@
 'use strict';
 
 const locator = require('./locator');
-const filterStack = require('./filter_stack');
 
 const noOp = () => undefined;
 
-class AssertionError extends Error {}
+class AssertionError extends Error { }
 
 class Example {
   constructor(description, kind, options, block, context) {
-    const { timeout } = {timeout: 200, ...context, ...options};
+    const { timeout } = { timeout: 200, ...context, ...options };
     this.timeout = timeout;
 
     this.kind = kind;
@@ -22,7 +21,7 @@ class Example {
   }
 
   set failure(error) {
-    this._failure = filterStack(error);
+    this._failure = error;
   }
 
   get failure() {

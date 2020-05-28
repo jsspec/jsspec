@@ -1,3 +1,6 @@
+### 0.2.2
+* Improve results when stack preparation is already overridden
+
 ### 0.2.1
 * Add changes for reporting improvements
 

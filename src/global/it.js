@@ -27,6 +27,7 @@ module.exports = {
       const storeFailure = error => example.failure = error;
 
       await this.runBeforeHooks().catch(storeFailure);
+
       if (!example.failure) await this.runAroundEach(example);
 
       this.emitter.emit('exampleEnd', example);

@@ -1,42 +1,36 @@
 'use strict';
 
-describe('timeout', {timeout: 20}, () => {
-  it('times out', () => {
-    return new Promise(resolve => setTimeout(resolve, 100));
-  });
-});
+const { noOp, nonExecutor: fail } = require('../spec/spec_helper');
+
+
+describe('timeout', { timeout: 20 }, () =>
+  it('times out', () => new Promise(resolve => setTimeout(resolve, 100)))
+);
 
 describe('before hook', () => {
-  before(() => expect(1).to.eql(2));
+  before(() => fail());
 
-  it('fails on the initial call', () => {});
+  it('fails on the initial call', noOp);
 
-  context('at depth', () => {
-    it('fails further calls', () => {});
-  });
+  context('at depth', () =>
+    it('fails further calls', noOp)
+  );
 });
 
 describe('after hook', () => {
-  after('fails with it\'s own report', () => expect(1).to.eql(2));
+  after('fails with it\'s own report', fail);
 
-  it('block for after test', () => {});
+  it('block for after test', noOp);
 });
 
 describe('Error preparation', () => {
   set('code', 'const a=1; a=2;');
 
-  it('hits the non-filename code for an eval', () => {
-    eval(code);
-  });
+  it('hits the non-filename code for an eval', () => eval(code));
 });
 
-eval('describe("Location extraction", () => it("hits the non-filename code", () => { expect(1).to.eql(2)}));');
+eval('describe("Location extraction", () => it("hits the non-filename code", () => { expect(1).to.eq(2)}));');
 
 
-describe('Bad invocation', () => {
-  itBehavesLike('a shared example that does not exist');
-});
-
-describe('Bad invocation', () => {
-  includeContext('a shared context that does not exist');
-});
+describe('Bad invocation', () => itBehavesLike('a shared example that does not exist'));
+describe('Bad invocation', () => includeContext('a shared context that does not exist'));

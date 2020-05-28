@@ -1,6 +1,7 @@
 'use strict';
 
 require('./filter_stack'); // needs to have 'original' stack prep stored
+
 const RunnerManager = require('./runner_manager');
 const WatchManager = require('./watch_manager');
 const Options = require('./options');

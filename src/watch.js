@@ -1,5 +1,7 @@
 'use strict';
 
+require('./filter_stack');
+
 const Runner = require('./runner');
 const resolve = require('./utility/resolve');
 const Rand = require('./utility/rand');

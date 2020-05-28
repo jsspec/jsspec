@@ -1,66 +1,46 @@
 'use strict';
-require('./locator'); // allow locator to store original prep
 
-const originalPrep = Error.prepareStackTrace;
+const errorDepth = Error.stackTraceLimit;
+Error.stackTraceLimit = Infinity;
+
 let previous;
-let errorDepth;
+let skip;
 
-const stackFrameIndices = stack => {
+const reStack = stack => {
+  if (skip || process.env.DEBUG) {
+    skip = false;
+    return stack.slice(0, errorDepth);
+  }
   let os = 0;
   let result = [];
   while (os < stack.length && result.length < errorDepth + 2) {
     const fileName = stack[os].getFileName() || '';
     if (fileName.startsWith(__dirname)) {
-      while (result.length && !stack[result[result.length - 1]].getFileName()) {
+      while (result.length && !result[result.length - 1].getFileName()) {
         result.pop();
       }
     } else {
-      result.push(os);
+      result.push(stack[os]);
     }
     os++;
   }
-  if (result.length === 0 && stack.length > 0) result.push(0);
-  return result;
+  if (result.length === 0 && stack.length > 0) result.push(stack[0]);
+  return result.slice(0, errorDepth);
 };
 
-const prepareStackTraceModified = (error, stack) => {
-  let modifiedStack = previous(error, stack);
-  if (process.env.DEBUG) return modifiedStack;
+const depthPrep = (error, stack) => previous(error, reStack(stack));
+const cleanPrep = (error, stack) => [error, ...reStack(stack)].join('\n    at ');
+const prep = (error, stack) => ('function' === typeof previous) ? depthPrep(error, stack) : cleanPrep(error, stack);
 
-  modifiedStack = modifiedStack.split(/\n\s+at.*\((.*)\)$/m).filter((_, index) => index % 2);
+prep.skip = () => skip = true;
 
-  const frameIndexes = stackFrameIndices(stack);
+const originalTrace = Error.prepareStackTrace;
+Error.prepareStackTrace = prep;
 
-  return [
-    error,
-    ...frameIndexes.slice(0, errorDepth).map(index =>
-      stack[index]
-        .toString()
-        .replace(/^(.*)\(.*\)$/, `$1(${modifiedStack[index]})`)
-    )
-  ].join('\n    at ');
-};
-
-const prepareStackTraceNice = (error, stack) => {
-  if (process.env.DEBUG) return [error, ...stack].join('\n    at ');
-  const frameIndexes = stackFrameIndices(stack);
-
-  return [
-    error, ...frameIndexes.slice(0, errorDepth).map(index => stack[index])
-  ].join('\n    at ');
-};
-
-module.exports = error => {
-  errorDepth = Error.stackTraceLimit;
-  previous = Error.prepareStackTrace;
-
-  Error.stackTraceLimit = Infinity;
-  if (previous !== originalPrep) Error.prepareStackTrace = prepareStackTraceModified;
-  else Error.prepareStackTrace = prepareStackTraceNice;
+module.exports = (error, existingPrepStack = originalTrace) => {
+  const storePrep = previous;
+  previous = existingPrepStack;
   error.stack;
-
-  Error.stackTraceLimit = errorDepth;
-  Error.prepareStackTrace = previous;
-
+  previous = storePrep;
   return error;
 };
