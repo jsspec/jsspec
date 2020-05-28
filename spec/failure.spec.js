@@ -3,7 +3,7 @@
 const cp = require('child_process');
 
 const absolute = require('path').join(process.cwd(), 'fail_spec/ok.spec.js');
-let spawned = cp.spawnSync(process.argv[0], ['./bin/jsspec', '-r', 'chai/register-expect', 'not/a/file.js', '-RR', './fail_spec/*.spec.js', './fail_spec/not.a.file.js', absolute], { stdio: 'pipe' });
+let spawned = cp.spawnSync(process.argv[0], ['./bin/jsspec', '-r', 'chai/register-expect', 'not/a/file.js', '-RRb', './fail_spec/*.spec.js', './fail_spec/not.a.file.js', absolute], { stdio: 'pipe' });
 
 let result = spawned.stdout.toString();
 

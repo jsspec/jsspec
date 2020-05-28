@@ -15,7 +15,6 @@ class RootContext {
   async runAfterEach() { }
   async runBeforeHooks() { }
   async runBeforeEach() { }
-  async runAfterHooks() { }
   retrieveSubject() { throw ReferenceError('Subject is not defined in this context'); }
   get executing() { return false; }
   addChild() { }

@@ -10,6 +10,7 @@ const jsSpecCLIOptions = {
   format: { alias: 'f', type: String, required: false, default: 'documentation' },
   timeout: { alias: 't', type: Number, required: false, default: 200 },
   watch: { alias: 'w', type: Boolean, required: false, default: false },
+  bland: { alias: 'b', type: Boolean, required: false, default: false },
   files: { type: Array, required: false, default: ['spec/**/*.spec.js'] }
 };
 
@@ -33,7 +34,7 @@ class JSSpecOptions {
         try {
           require(resolve(requestedModule));
           return true;
-        }catch (error) {
+        } catch (error) {
           this.errors.push(error);
         }
       }
