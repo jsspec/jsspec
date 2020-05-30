@@ -2,10 +2,18 @@
 
 const { noOp, nonExecutor: fail } = require('../spec/spec_helper');
 
+describe('timeout', { timeout: 20 }, () => {
+  it('times out', () => new Promise(resolve => setTimeout(resolve, 100)));
 
-describe('timeout', { timeout: 20 }, () =>
-  it('times out', () => new Promise(resolve => setTimeout(resolve, 100)))
-);
+  context('with a long running non-promise', () => {
+    it('times out', () => {
+      const time = Date.now() + 21;
+      while (Date.now() < time) {
+        for (let i = 0; i < 50000; i++) parseInt("0123");
+      }
+    });
+  });
+});
 
 describe('before hook', () => {
   before(() => fail());

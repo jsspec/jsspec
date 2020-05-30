@@ -1,9 +1,6 @@
 'use strict';
 
 const locator = require('./locator');
-
-const noOp = () => undefined;
-
 class AssertionError extends Error { }
 
 class Example {
@@ -72,7 +69,15 @@ class Example {
   }
 
   async run() {
-    if (this.timeout > 0) return Promise.race([this.block(), this.timer()]).then(noOp);
+    if (this.timeout > 0) {
+      const start = Date.now();
+      return Promise.race([this.block(), this.timer()]).then(() => {
+        // this is required for situations where the block provided is not async.
+        // The block may not yield control to the event loop to enable the
+        // timer to racing timer to trigger the timeout call.
+        if (Date.now() > start + this.timeout) throw this.timeoutError;
+      });
+    }
     await this.block();
   }
 

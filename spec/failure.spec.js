@@ -8,7 +8,7 @@ let spawned = cp.spawnSync(process.argv[0], ['./bin/jsspec', '-r', 'chai/registe
 let result = spawned.stdout.toString();
 
 describe('failures', () => {
-  set('failures', 11);
+  set('failures', 12);
   set('contextLevelFailures', 4);
   set('total', () => failures - contextLevelFailures);
 
