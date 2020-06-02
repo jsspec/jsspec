@@ -1,3 +1,7 @@
+### 0.2.3
+* Improve timeout handling
+* Improve sub context selection
+
 ### 0.2.2
 * Add bland option for no colour output
 * Improve results when stack preparation is already overridden

@@ -5,14 +5,14 @@ const Context = require('../src/context');
 describe('Context', () => {
   set('description', 'test context');
   set('options', {});
-  set('block', () => () => {});
+  set('block', () => () => { });
 
   subject('testContext', () => new Context(description, options, block));
 
   beforeEach(() => {
     testContext._location = { line: 4 };
     testContext.children = [{ _location: { line: 5 } }, { _location: { line: 10 } }];
-    testContext.examples = [{ line: 6 },{ line: 12, index: [1] }];
+    testContext.examples = [{ line: 6 }, { line: 12, index: [1] }];
   });
 
   describe('sub context selection', () => {
@@ -71,7 +71,7 @@ describe('Context', () => {
       it('selects all children', () => {
         expect(subject.selectedExamples()).to.eql(["0", "1"]);
       });
-    })
+    });
     context('with a line set', () => {
       set('options', { runLine: 6 });
 
@@ -110,7 +110,7 @@ describe('Context', () => {
 
     beforeEach(() => testContext.failure = new Error('bad things'));
 
-    it('has the required components', () =>{
+    it('has the required components', () => {
       expect(subject).to.have.all.keys([
         'id',
         'description',

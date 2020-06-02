@@ -123,7 +123,7 @@ class Context {
     if ('contextIndex' in this) {
       selected = []; // need to go deeper
     } else if (this.runLine) {
-      if (this.runLine == this._location.line) {
+      if (this.runLine <= this._location.line) {
         selected = Object.keys(this.examples);
       } else {
         selected = [this.examples.findIndex(({ line }) => line === this.runLine)];
