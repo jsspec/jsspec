@@ -4,8 +4,8 @@
   "description": "JSSpec - contextualised test runner for javascript",
   "main": "index.js",
   "scripts": {
-    "test": "bin/jsspec -r chai/register-expect",
-    "coverage": "c8 --all=true --clean=true -r html -r text bin/jsspec -r chai/register-expect -fo -b"
+    "test": "node bin/jsspec -r chai/register-expect",
+    "coverage": "c8 --all=true --clean=true -r html -r text node bin/jsspec -r chai/register-expect -fo -b"
   },
   "bin": "bin/jsspec",
   "repository": {
