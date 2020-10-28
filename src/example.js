@@ -1,7 +1,13 @@
 'use strict';
 
-const locator = require('./locator');
-class AssertionError extends Error { }
+const locator = require("./locator");
+
+class NonErrorError extends Error {
+  toString() {
+    return this.message;
+  }
+}
+class AssertionError extends Error {}
 
 class Example {
   constructor(description, kind, options, block, context) {
@@ -14,6 +20,7 @@ class Example {
     this.context = context;
 
     this._location = locator.location;
+    this.stringError = new NonErrorError("");
     this.timeoutError = new AssertionError(`example timeout (${this.timeout}ms) exceeded`);
   }
 
@@ -69,16 +76,24 @@ class Example {
   }
 
   async run() {
-    if (this.timeout > 0) {
-      const start = Date.now();
-      return Promise.race([this.block(), this.timer()]).then(() => {
-        // this is required for situations where the block provided is not async.
-        // The block may not yield control to the event loop to enable the
-        // timer to racing timer to trigger the timeout call.
-        if (Date.now() > start + this.timeout) throw this.timeoutError;
-      });
+    try {
+      if (this.timeout > 0) {
+        const start = Date.now();
+        return Promise.race([this.block(), this.timer()]).then(() => {
+          // this is required for situations where the block provided is not async.
+          // The block may not yield control to the event loop to enable the
+          // timer to racing timer to trigger the timeout call.
+          if (Date.now() > start + this.timeout) throw this.timeoutError;
+        });
+      }
+      await this.block();
+    } catch(e) {
+      if(!e.stack) {
+        this.stringError.message = e;
+        throw this.stringError;
+      }
+      throw e;
     }
-    await this.block();
   }
 
   timer() {
