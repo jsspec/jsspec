@@ -1,6 +1,6 @@
 'use strict';
 
-const locator = require("./locator");
+const locator = require('./locator');
 
 class NonErrorError extends Error {
   toString() {
@@ -20,7 +20,7 @@ class Example {
     this.context = context;
 
     this._location = locator.location;
-    this.stringError = new NonErrorError("");
+    this.stringError = new NonErrorError('');
     this.timeoutError = new AssertionError(`example timeout (${this.timeout}ms) exceeded`);
   }
 
@@ -42,13 +42,13 @@ class Example {
       timeout: this.timeout,
       failure: this.failure && {
         constructor: {
-          name: this.failure.constructor.name
+          name: this.failure.constructor.name,
         },
         stack: this.failure.stack,
         message: this.failure.message,
         expected: this.failure.expected,
         actual: this.failure.actual,
-      }
+      },
     };
   }
 
@@ -87,8 +87,8 @@ class Example {
         });
       }
       await this.block();
-    } catch(e) {
-      if(!e.stack) {
+    } catch (e) {
+      if (!e.stack) {
         this.stringError.message = e;
         throw this.stringError;
       }

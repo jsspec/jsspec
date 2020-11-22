@@ -48,11 +48,7 @@ class WatchManager extends RunnerManager {
   addRequiredFile(specFile, requiredFile) {
     const requirement = this.requiredFiles.get(requiredFile).add(specFile);
     if (!requirement.watcher) {
-      requirement.watcher = watch(
-        requiredFile,
-        { persistent: false, interval: 501 },
-        this.debounceFork.bind(this, requiredFile)
-      );
+      requirement.watcher = watch(requiredFile, { persistent: false, interval: 501 }, this.debounceFork.bind(this, requiredFile));
     }
   }
 
@@ -71,7 +67,9 @@ class WatchManager extends RunnerManager {
     state.timer = setTimeout(this.forkSpec.bind(this, name), 50);
   }
 
-  runFile(file) { this.forkSpec(file.name); }
+  runFile(file) {
+    this.forkSpec(file.name);
+  }
 }
 
 module.exports = WatchManager;

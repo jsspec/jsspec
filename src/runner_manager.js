@@ -25,14 +25,16 @@ class RunnerManager extends EventEmitter {
     let failed = false;
     let lister = fileLister.lister();
     for await (const file of lister) {
-      failed = await this.runFile(file) || failed;
+      failed = (await this.runFile(file)) || failed;
     }
     this.complete();
-    return failed;}
+    return failed;
+  }
 
   async runFile(file) {
     const runner = new Runner(this.settings, file, ++this.index);
-    return await runner.run(this);}
+    return await runner.run(this);
+  }
 }
 
 module.exports = RunnerManager;

@@ -5,7 +5,7 @@ const Context = require('../src/context');
 describe('Context', () => {
   set('description', 'test context');
   set('options', {});
-  set('block', () => () => { });
+  set('block', () => () => {});
 
   subject('testContext', () => new Context(description, options, block));
 
@@ -69,7 +69,7 @@ describe('Context', () => {
       set('options', { runLine: 4 });
 
       it('selects all children', () => {
-        expect(subject.selectedExamples()).to.eql(["0", "1"]);
+        expect(subject.selectedExamples()).to.eql(['0', '1']);
       });
     });
     context('with a line set', () => {
@@ -108,18 +108,10 @@ describe('Context', () => {
   describe('#toJSON', () => {
     subject(() => testContext.toJSON());
 
-    beforeEach(() => testContext.failure = new Error('bad things'));
+    beforeEach(() => (testContext.failure = new Error('bad things')));
 
     it('has the required components', () => {
-      expect(subject).to.have.all.keys([
-        'id',
-        'description',
-        'fullDescription',
-        'location',
-        'kind',
-        'base',
-        'failure'
-      ]);
+      expect(subject).to.have.all.keys(['id', 'description', 'fullDescription', 'location', 'kind', 'base', 'failure']);
     });
   });
 });

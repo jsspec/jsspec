@@ -59,7 +59,7 @@ describe('Options', () => {
         it('sets random on', () => {
           expect(subject.random).to.be.true;
         });
-      })
+      });
     });
   });
 });

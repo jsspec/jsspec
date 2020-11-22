@@ -30,9 +30,9 @@ const reStack = stack => {
 
 const depthPrep = (error, stack) => previous(error, reStack(stack));
 const cleanPrep = (error, stack) => [error, ...reStack(stack)].join('\n    at ');
-const prep = (error, stack) => ('function' === typeof previous) ? depthPrep(error, stack) : cleanPrep(error, stack);
+const prep = (error, stack) => ('function' === typeof previous ? depthPrep(error, stack) : cleanPrep(error, stack));
 
-prep.skip = () => skip = true;
+prep.skip = () => (skip = true);
 
 const originalTrace = Error.prepareStackTrace;
 Error.prepareStackTrace = prep;

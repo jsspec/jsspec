@@ -1,6 +1,6 @@
 'use strict';
 
-const {nonExecutor, noOp} = require('./spec_helper');
+const { nonExecutor, noOp } = require('./spec_helper');
 
 describe('shared examples', () => {
   let callCount = 0;
@@ -19,7 +19,7 @@ describe('shared examples', () => {
   });
 
   context('with args', () => {
-    sharedExamples('an example that takes args', {}, (object) => {
+    sharedExamples('an example that takes args', {}, object => {
       object.sharedCalled = true;
       it('caller does not need local tests for hooks to execute', noOp);
     });
@@ -40,7 +40,7 @@ describe('bad use of shared examples', () => {
   try {
     sharedExamples('no Executor');
     it('should not execute this block', nonExecutor);
-  }catch (e) {
+  } catch (e) {
     it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
   }
 });

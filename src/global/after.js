@@ -32,16 +32,16 @@ module.exports = {
       }
 
       this.endBlock();
-    }
+    },
   },
   global(description, optionOrBlock, block) {
     if (this.executing) throw new ReferenceError('A hook (`after`) can not be defined inside an example block');
 
-    if (block instanceof Function) { /* noop */ }
-    else if (optionOrBlock instanceof Function) [optionOrBlock, block] = [{}, optionOrBlock];
+    if (block instanceof Function) {
+      /* noop */
+    } else if (optionOrBlock instanceof Function) [optionOrBlock, block] = [{}, optionOrBlock];
     else if (description instanceof Function) [description, optionOrBlock, block] = ['after hook', {}, description];
     else throw TypeError('`after` must be provided an executable block');
     this.currentContext.addAfterHook(new AfterExample(description, 'after', optionOrBlock, block, this.currentContext));
-
-  }
+  },
 };

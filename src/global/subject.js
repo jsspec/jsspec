@@ -18,28 +18,25 @@ const settings = {
       if (this.subject === UNSET) return this.parent.retrieveSubject();
       if (this.subject) return global[this.subject];
       return this.compute(null);
-    }
+    },
   },
   global: {
     configurable: false,
     get() {
       const context = Context.currentContext;
-      if(context.executing) {
+      if (context.executing) {
         if ('subjectValue' in context) return context.subjectValue;
-        return context.subjectValue = context.retrieveSubject();
+        return (context.subjectValue = context.retrieveSubject());
       }
-      return (...args) => args.length > 1 ?
-        context.setSubject(...args) :
-        context.setSubject(null, ...args);
+      return (...args) => (args.length > 1 ? context.setSubject(...args) : context.setSubject(null, ...args));
     },
-    set(value){
+    set(value) {
       const context = Context.currentContext;
-      if(Context.executing) return context.subjectValue = value;
+      if (Context.executing) return (context.subjectValue = value);
       context.failure = new ReferenceError('`subject` is assignable only inside an example block');
       context.emitter.emit('contextLevelFailure', context);
-    }
-  }
+    },
+  },
 };
-
 
 module.exports = settings;

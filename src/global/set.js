@@ -4,8 +4,8 @@ const Context = require('../context');
 let computedValues = new Map();
 let globalisedKeys = new Set();
 
-const globaliseKey = (key) => {
-  if (globalisedKeys.has(key) || (key in global)) return;
+const globaliseKey = key => {
+  if (globalisedKeys.has(key) || key in global) return;
 
   globalisedKeys.add(key);
   if (!key) return;
@@ -27,7 +27,7 @@ const globaliseKey = (key) => {
       }
       computedValues.set(key, value);
       return value;
-    }
+    },
   });
 };
 
@@ -78,18 +78,16 @@ module.exports = {
       }
 
       let creatorOrValue = this.retrieveCreator(key);
-      if (creatorOrValue instanceof Function &&
-        // a class isn't callable
-        !creatorOrValue.toString().startsWith('class')
-      ) {
+      // a class isn't callable
+      if (creatorOrValue instanceof Function && !creatorOrValue.toString().startsWith('class')) {
         return creatorOrValue();
       }
       return creatorOrValue;
-    }
+    },
   },
   global(key, value) {
     if (this.executing) throw new ReferenceError('Setting lazy evaluators within a running context is not permitted');
 
     this.currentContext.addDefinition(key, value);
-  }
+  },
 };

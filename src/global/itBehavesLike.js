@@ -3,7 +3,9 @@
 const Context = require('../context');
 
 class SharedExamples extends Context {
-  get indexed() { return true; }
+  get indexed() {
+    return true;
+  }
 }
 
 module.exports = {
@@ -20,6 +22,7 @@ module.exports = {
       `it behaves like ${sharedExampleContext.description}`,
       sharedExampleContext.optionsOrBlock,
       sharedExampleContext.contextBlock.bind(null, ...args),
-      this.currentContext);
-  }
+      this.currentContext
+    );
+  },
 };

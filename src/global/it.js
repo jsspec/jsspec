@@ -24,7 +24,7 @@ module.exports = {
     async runExample(example) {
       this.startBlock();
       this.emitter.emit('exampleStart', example);
-      const storeFailure = error => example.failure = error;
+      const storeFailure = error => (example.failure = error);
 
       await this.runBeforeHooks().catch(storeFailure);
 
@@ -33,15 +33,16 @@ module.exports = {
       this.emitter.emit('exampleEnd', example);
       this.endBlock();
       return !!example.failure;
-    }
+    },
   },
   global(description, optionOrBlock, block) {
     if (this.executing) throw new ReferenceError('An example block (`it`) can not be defined inside another');
 
-    if (block instanceof Function) { /* noop */ }
-    else if (optionOrBlock instanceof Function) [optionOrBlock, block] = [{}, optionOrBlock];
+    if (block instanceof Function) {
+      /* noop */
+    } else if (optionOrBlock instanceof Function) [optionOrBlock, block] = [{}, optionOrBlock];
     else throw TypeError('`it` must be provided an executable block');
 
     this.currentContext.addExecutor(new Example(description, 'it', optionOrBlock, block, this.currentContext));
-  }
+  },
 };

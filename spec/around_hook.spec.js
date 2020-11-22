@@ -8,34 +8,39 @@ describe('aroundEach', () => {
   describe('call types and ordering', { random: false }, () => {
     const afterTrace = callTrace();
 
-    aroundEach('Named with option', {}, async (eg) => {
-      afterTrace('A'); await eg(); afterTrace('B');
+    aroundEach('Named with option', {}, async eg => {
+      afterTrace('A');
+      await eg();
+      afterTrace('B');
     });
-    aroundEach('Named', async (eg) => {
-      afterTrace('C'); await eg(); afterTrace('D');
+    aroundEach('Named', async eg => {
+      afterTrace('C');
+      await eg();
+      afterTrace('D');
     });
-    aroundEach(async (eg) => {
-      afterTrace('E'); await eg(); afterTrace('F');
+    aroundEach(async eg => {
+      afterTrace('E');
+      await eg();
+      afterTrace('F');
     });
 
     it('all are called in order, once per example', () => expect(afterTrace('x')).to.eq('ACEx'));
     it('all are called in order, once per example', () => expect(afterTrace('y')).to.eq('ACExFDBACEy'));
-    after(() => expect(afterTrace()).to.eq('ACExFDBACEyFDB'))
+    after(() => expect(afterTrace()).to.eq('ACExFDBACEyFDB'));
   });
 
   describe('calling with no function', () => {
     try {
       aroundEach('what even is this');
       it(nonExecutor);
-    }catch (error) {
+    } catch (error) {
       it('throws', () => expect(error).to.be.an.instanceOf(TypeError));
     }
   });
 
   describe('calling from within an example', () => {
-    it('throws', () => expect(
-      () => aroundEach('called in executor', nonExecutor)
-    ).to.throw(ReferenceError, 'A hook (`aroundEach`) can not be defined inside an example block'));
+    it('throws', () =>
+      expect(() => aroundEach('called in executor', nonExecutor)).to.throw(ReferenceError, 'A hook (`aroundEach`) can not be defined inside an example block'));
   });
 
   context('passed a generator', () => {
@@ -128,14 +133,12 @@ describe('aroundEach', () => {
     after(() => {
       expect(afterTrace('s')).to.eq(endState);
     });
-    aroundEach(function * () {
+    aroundEach(function* () {
       afterTrace('t');
       yield;
       afterTrace('u');
     });
 
     it('enters in order', () => expect(afterTrace('v')).to.eq('ptqv'));
-
-
   });
 });

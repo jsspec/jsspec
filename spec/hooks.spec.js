@@ -25,21 +25,20 @@ describe('before', () => {
     try {
       before('what even is this');
       it(nonExecutor);
-    }catch (error) {
+    } catch (error) {
       it('throws', () => expect(error).to.be.an.instanceOf(TypeError));
     }
   });
 
   describe('calling from within an example', () => {
-    it('throws', () => expect(
-      () => before('called in executor', nonExecutor)
-    ).to.throw(ReferenceError, 'hook (`before`) can not be defined inside an example block'));
+    it('throws', () =>
+      expect(() => before('called in executor', nonExecutor)).to.throw(ReferenceError, 'hook (`before`) can not be defined inside an example block'));
   });
 
   describe('calling from within a hook', () => {
-    before('throws', () => expect(
-      () => before('called in executor', nonExecutor)
-    ).to.throw(ReferenceError, 'hook (`before`) can not be defined inside an example block'));
+    before('throws', () =>
+      expect(() => before('called in executor', nonExecutor)).to.throw(ReferenceError, 'hook (`before`) can not be defined inside an example block')
+    );
 
     it('', noOp);
   });
@@ -75,21 +74,20 @@ describe('after', () => {
     try {
       after('what even is this');
       it(noOp);
-    }catch (error) {
+    } catch (error) {
       it('throws', () => expect(error).to.be.an.instanceOf(TypeError));
     }
   });
 
   describe('calling from within an example', () => {
-    it('throws', () => expect(
-      () => after('called in executor', nonExecutor)
-    ).to.throw(ReferenceError, 'hook (`after`) can not be defined inside an example block'));
+    it('throws', () =>
+      expect(() => after('called in executor', nonExecutor)).to.throw(ReferenceError, 'hook (`after`) can not be defined inside an example block'));
   });
 
   describe('calling from within a hook', () => {
-    after('throws', () => expect(
-      () => after('called in executor', nonExecutor)
-    ).to.throw(ReferenceError, 'hook (`after`) can not be defined inside an example block'));
+    after('throws', () =>
+      expect(() => after('called in executor', nonExecutor)).to.throw(ReferenceError, 'hook (`after`) can not be defined inside an example block')
+    );
 
     it('', noOp);
   });

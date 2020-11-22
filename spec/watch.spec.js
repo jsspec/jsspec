@@ -3,7 +3,11 @@
 const fs = require('fs');
 const cp = require('child_process');
 
-let testExecutor = cp.fork('./bin/jsspec', ['-r', 'chai/register-expect', '/some/non/file', '-Rw', './watch_spec/bland.spec.js', './watch_spec/bland2.spec.js'], { stdio: 'pipe' });
+let testExecutor = cp.fork(
+  './bin/jsspec',
+  ['-r', 'chai/register-expect', '/some/non/file', '-Rw', './watch_spec/bland.spec.js', './watch_spec/bland2.spec.js'],
+  { stdio: 'pipe' }
+);
 let stdout = '';
 
 let changed;
@@ -13,7 +17,7 @@ testExecutor.stdout.on('data', data => {
   changed = true;
 });
 
-const awaitChange = async (trigger = () => { }) => {
+const awaitChange = async (trigger = () => {}) => {
   changed = false;
   await trigger();
   return new Promise(resolve => {
@@ -57,7 +61,7 @@ describe('watched', { random: false }, () => {
   });
 
   it('can be cancelled to end', { timeout: 0 }, async () => {
-    if (process.platform == "win32") {
+    if (process.platform == 'win32') {
       // On windows, under test, the running process has no tty, so can't handle
       // signals. Sending 'x' on the input stream provides the same behaviour
       await awaitChange(() => testExecutor.stdin.write('x'));

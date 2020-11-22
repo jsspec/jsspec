@@ -21,7 +21,7 @@ describe('shared context', () => {
   });
 
   context('with args', () => {
-    sharedContext('an example that takes args', {}, (object) => {
+    sharedContext('an example that takes args', {}, object => {
       object.sharedCalled = true;
       it('caller does not need local tests for hooks to execute', noOp);
     });
@@ -33,7 +33,7 @@ describe('shared context', () => {
     });
   });
 
-  sharedContext('value changer', (expectedValue) => {
+  sharedContext('value changer', expectedValue => {
     set('value', 1);
 
     it('keeps the last value set based on order of operation inside', () => expect(value).to.eql(expectedValue));
@@ -64,7 +64,7 @@ describe('bad use of shared context', () => {
   try {
     sharedContext('no Executor');
     it('should not execute this block', nonExecutor);
-  }catch (e) {
+  } catch (e) {
     it('fails', () => expect(e).to.be.an.instanceOf(TypeError));
   }
 });

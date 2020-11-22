@@ -17,13 +17,12 @@ describe('named subject', () => {
     itBehavesLike('the same object');
 
     it('becomes its own object', () => {
-      subject = {nothingImportant: true};
+      subject = { nothingImportant: true };
       expect(subject).not.to.eql(testedObject);
       expect(testedObject.nothingImportant).to.be.undefined;
       expect(subject.nothingImportant).to.be.true;
     });
   });
-
 
   describe('assigning to object', () => {
     itBehavesLike('the same object');
@@ -32,17 +31,16 @@ describe('named subject', () => {
       beforeEach(() => expect(subject).to.eql(testedObject));
 
       it('is still accessible as the subject', () => {
-        testedObject = {nothingImportant: true};
+        testedObject = { nothingImportant: true };
         expect(subject).not.to.eql(testedObject);
         expect(subject.nothingImportant).to.be.undefined;
         expect(testedObject.nothingImportant).to.be.true;
       });
     });
 
-
     context('before subject has been referred to', () => {
       it('is still accessible as the subject', () => {
-        testedObject = {nothingImportant: true};
+        testedObject = { nothingImportant: true };
         expect(subject).to.eql(testedObject);
         expect(subject.nothingImportant).to.be.true;
         expect(testedObject.nothingImportant).to.be.true;

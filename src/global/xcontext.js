@@ -9,5 +9,5 @@ const noOp = () => undefined;
 module.exports = {
   global(description) {
     new XContext(description, {}, noOp, this.currentContext);
-  }
+  },
 };

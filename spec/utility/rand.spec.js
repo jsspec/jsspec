@@ -15,7 +15,7 @@ describe('Rand', () => {
     context('successive calls', () => {
       it('returns unique values (mostly)', () => {
         const results = new Set();
-        for(let i = 0; i < 10000; i++) {
+        for (let i = 0; i < 10000; i++) {
           results.add(Rand.rand());
         }
         expect(results).to.have.lengthOf.above(9000);
@@ -26,7 +26,7 @@ describe('Rand', () => {
   describe('.randSort', () => {
     it('returns only -1 and 1', () => {
       const results = new Set();
-      for(let i = 0; i < 10000; i++) {
+      for (let i = 0; i < 10000; i++) {
         results.add(Rand.randSort());
       }
       expect(results).to.have.lengthOf(2);
@@ -35,10 +35,10 @@ describe('Rand', () => {
 
     it('is near 50:50', () => {
       let result = 0;
-      for(let i = 0; i < 100000; i++) {
+      for (let i = 0; i < 100000; i++) {
         result += Rand.randSort();
       }
-      expect(Math.abs(result) / 1000 | 0).to.equal(0);
+      expect((Math.abs(result) / 1000) | 0).to.equal(0);
     });
   });
 
@@ -47,7 +47,9 @@ describe('Rand', () => {
     set('initialRun', () => {
       Rand.seed(seed);
       let results = [];
-      for(let i=0; i < 100000; i++) { results.push(Rand.rand()) }
+      for (let i = 0; i < 100000; i++) {
+        results.push(Rand.rand());
+      }
       return results;
     });
 
@@ -76,7 +78,7 @@ describe('Rand', () => {
     it('creates a different seed (almost) every time', () => {
       let previous = Rand.looseSeed();
       let repeatCount = 0;
-      for(let i = 0; i < 1000; i++) {
+      for (let i = 0; i < 1000; i++) {
         let current = Rand.looseSeed();
         repeatCount += current === previous ? 1 : 0;
       }

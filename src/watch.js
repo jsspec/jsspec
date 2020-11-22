@@ -9,15 +9,16 @@ const Rand = require('./utility/rand');
 const { addHook } = require('pirates');
 
 const emitter = {
-  emit(message, ...data) { process.send([message, ...data]); }
+  emit(message, ...data) {
+    process.send([message, ...data]);
+  },
 };
 
 const runner = async ({ settings, file, index }) => {
-  addHook(
-    (code, filename) => {
-      emitter.emit('required', file.name, filename);
-      return code;
-    });
+  addHook((code, filename) => {
+    emitter.emit('required', file.name, filename);
+    return code;
+  });
 
   Rand.seed(settings.seed);
 
@@ -38,7 +39,9 @@ const runner = async ({ settings, file, index }) => {
 
 const handler = ({ kill, ...rest }) => {
   /* c8 ignore next */
-  if (kill) { return process.removeAllListeners(); }
+  if (kill) {
+    return process.removeAllListeners();
+  }
   runner(rest);
 };
 

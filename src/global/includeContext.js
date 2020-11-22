@@ -16,5 +16,5 @@ module.exports = {
     // don't change the current context
     sharedContext.contextBlock.apply(null, args);
     this.currentContext.indexed = preState;
-  }
+  },
 };

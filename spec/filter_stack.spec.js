@@ -4,7 +4,9 @@ const filterStack = require('../src/filter_stack');
 const { nonExecutor } = require('./spec_helper');
 
 describe('Error stack preparation', () => {
-  subject('error', () => { throw Error('hello'); });
+  subject('error', () => {
+    throw Error('hello');
+  });
 
   it('contains the context description', () => {
     try {
@@ -29,10 +31,7 @@ describe('Error stack preparation', () => {
   });
 
   context('when stack prep has been overridden', () => {
-    set('replacementPrep', () => (error, stack) => [
-      error,
-      ...stack.map(frame => frame.toString().replace(/\((.*)\)/g, '(replaced $1)'))
-    ].join('\n    at '));
+    set('replacementPrep', () => (error, stack) => [error, ...stack.map(frame => frame.toString().replace(/\((.*)\)/g, '(replaced $1)'))].join('\n    at '));
 
     it('filters, but returns the `original`', () => {
       try {

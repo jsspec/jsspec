@@ -6,23 +6,43 @@ const Rand = require('./utility/rand');
 let currentContext;
 let baseContext;
 
-const callOnMe = function (method) { method.call(this); };
+const callOnMe = function (method) {
+  method.call(this);
+};
 
 class RootContext {
-  get fullDescription() { return ''; }
-  index() { return []; }
-  get base() { return null; }
-  async runAfterEach() { }
-  async runBeforeHooks() { }
-  async runBeforeEach() { }
-  retrieveSubject() { throw ReferenceError('Subject is not defined in this context'); }
-  get executing() { return false; }
-  addChild() { }
-  setTreeExecution() { }
-  retrieveCreator(key) { throw ReferenceError(`\`${key}\` is not set in this context`); }
-  findSharedContext() { return null; }
-  findExamples() { return null; }
-  wrapAroundEach(example) { return example; }
+  get fullDescription() {
+    return '';
+  }
+  index() {
+    return [];
+  }
+  get base() {
+    return null;
+  }
+  async runAfterEach() {}
+  async runBeforeHooks() {}
+  async runBeforeEach() {}
+  retrieveSubject() {
+    throw ReferenceError('Subject is not defined in this context');
+  }
+  get executing() {
+    return false;
+  }
+  addChild() {}
+  setTreeExecution() {}
+  retrieveCreator(key) {
+    throw ReferenceError(`\`${key}\` is not set in this context`);
+  }
+  findSharedContext() {
+    return null;
+  }
+  findExamples() {
+    return null;
+  }
+  wrapAroundEach(example) {
+    return example;
+  }
 }
 
 const rootContext = new RootContext();
@@ -84,8 +104,7 @@ class Context {
     if (this.runLine) {
       if (this.runLine === this._location.line) {
         selected = Object.keys(this.children);
-      }
-      else {
+      } else {
         let i = this.children.length;
         while (i--) {
           if (this.children[i]._location.line <= this.runLine) break;
@@ -106,7 +125,9 @@ class Context {
 
   async runChildren() {
     let selected = this.selectedContexts();
-    if (this.random) { selected.sort(Rand.randSort); }
+    if (this.random) {
+      selected.sort(Rand.randSort);
+    }
     let count = 0;
     for (let i = 0; i < selected.length; i++) {
       currentContext = this.children[selected[i]];
@@ -152,11 +173,13 @@ class Context {
     }
 
     if (!this.constructor.name.startsWith('X')) {
-      if (this.random) { selected.sort(Rand.randSort); }
-      for (let i = 0; i < selected.length; i++) {
-        failed = await this.runExample(this.examples[selected[i]]) || failed;
+      if (this.random) {
+        selected.sort(Rand.randSort);
       }
-      count = await this.runChildren() + selected.length;
+      for (let i = 0; i < selected.length; i++) {
+        failed = (await this.runExample(this.examples[selected[i]])) || failed;
+      }
+      count = (await this.runChildren()) + selected.length;
       if (count) await this.runAfterHooks();
     }
     this.failed = this.failed || failed;
@@ -186,13 +209,13 @@ class Context {
       location: this.location,
       failure: this.failure && {
         constructor: {
-          name: this.failure.constructor.name
+          name: this.failure.constructor.name,
         },
         stack: this.failure.stack,
         message: this.failure.message,
         expected: this.failure.expected,
         actual: this.failure.actual,
-      }
+      },
     };
   }
 

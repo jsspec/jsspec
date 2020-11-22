@@ -5,15 +5,21 @@ const Rand = require('./utility/rand');
 
 const promiseHold = {};
 
-const getPromise = () => new Promise(resolve => promiseHold.resolve = (name) => {
-  promiseHold.resolve = null;
-  resolve(name);
-});
+const getPromise = () =>
+  new Promise(
+    resolve =>
+      (promiseHold.resolve = name => {
+        promiseHold.resolve = null;
+        resolve(name);
+      })
+  );
 
 const resolveGlob = globOrFile => new Promise(resolve => new Glob(globOrFile, (_, matches) => resolve(matches)));
 
 class FileDetail {
-  static get re() { return /^(.*?)(?:\[(\d+(?::\d+)*)]|(?::(\d+)))?$/; }
+  static get re() {
+    return /^(.*?)(?:\[(\d+(?::\d+)*)]|(?::(\d+)))?$/;
+  }
 
   constructor(exampleSelector) {
     let [, name, runIndex, runLine] = exampleSelector.match(FileDetail.re);
@@ -29,13 +35,12 @@ class FileDetail {
   }
 }
 
-const nameToDetail = name => ({name});
+const nameToDetail = name => ({ name });
 
 const addAll = (collected, items = []) => [...collected, ...items];
 const flat = results => results.reduce(addAll, []);
 
 const uniqueDetails = names => Array.from(new Set(flat(names)), nameToDetail);
-
 
 class Walker {
   constructor(globOrFileList, random) {
@@ -54,32 +59,32 @@ class Walker {
   }
 
   async prepareOrdered() {
-    const globResults = await Promise.all(this.globList.map(resolveGlob))
-      .then(uniqueDetails);
+    const globResults = await Promise.all(this.globList.map(resolveGlob)).then(uniqueDetails);
     this.fileList = [...this.fileList, ...globResults];
     this.globComplete = true;
   }
   prepareRandom() {
-    this.globs = this.globList.sort(Rand.randSort)
-      .map(pattern => ({
-        pattern,
-        done: false,
-        glob: new Glob(pattern, { nosort: true })
-      }));
+    this.globs = this.globList.sort(Rand.randSort).map(pattern => ({
+      pattern,
+      done: false,
+      glob: new Glob(pattern, { nosort: true }),
+    }));
     this.globs.forEach(globTracker => {
-      globTracker.glob.on('end', () => {
-        globTracker.glob.removeAllListeners();
+      globTracker.glob
+        .on('end', () => {
+          globTracker.glob.removeAllListeners();
 
-        globTracker.done = true;
-        /* c8 ignore next 3 */
-        if (promiseHold.resolve && this.globs.every(({ done }) => done)) {
-          promiseHold.resolve();
-        }
-      }).on('match', name => {
-        if (this.responded.has(name)) return;
-        if (promiseHold.resolve) promiseHold.resolve(name);
-        else this.fileList.push({ name });
-      });
+          globTracker.done = true;
+          /* c8 ignore next 3 */
+          if (promiseHold.resolve && this.globs.every(({ done }) => done)) {
+            promiseHold.resolve();
+          }
+        })
+        .on('match', name => {
+          if (this.responded.has(name)) return;
+          if (promiseHold.resolve) promiseHold.resolve(name);
+          else this.fileList.push({ name });
+        });
     });
   }
   async nextFile() {

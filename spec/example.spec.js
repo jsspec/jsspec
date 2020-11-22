@@ -8,7 +8,7 @@ describe('Example', () => {
   set('options', {});
   set('description', 'an Example');
   set('kind', 'it');
-  set('block', () => (() => {}));
+  set('block', () => () => {});
   describe('#fullDescription', () => {
     subject(() => example.fullDescription);
 
@@ -26,7 +26,7 @@ describe('Example', () => {
 
     context('when indexed', () => {
       it('returns the one based index locations', () => {
-        example.index = [5,4,3];
+        example.index = [5, 4, 3];
         expect(subject).to.eql(`${__filename}[6:5:4]`);
       });
     });
@@ -35,18 +35,10 @@ describe('Example', () => {
   describe('#toJSON', () => {
     subject(() => example.toJSON());
 
-    beforeEach(() => example.failure = new Error('bad things'));
+    beforeEach(() => (example.failure = new Error('bad things')));
 
-    it('has the required components', () =>{
-      expect(subject).to.have.all.keys([
-        'description',
-        'fullDescription',
-        'kind',
-        'location',
-        'base',
-        'timeout',
-        'failure'
-      ]);
+    it('has the required components', () => {
+      expect(subject).to.have.all.keys(['description', 'fullDescription', 'kind', 'location', 'base', 'timeout', 'failure']);
     });
   });
 });

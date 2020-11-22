@@ -3,8 +3,8 @@
 const Example = require('./example');
 
 /* c8 ignore next 2 */
-const Generator = (function* () { }).constructor;
-const AsyncGenerator = (async function* () { }).constructor;
+const Generator = function* () {}.constructor;
+const AsyncGenerator = async function* () {}.constructor;
 
 class ExampleWrapper extends Example {
   around(example) {
@@ -16,14 +16,18 @@ class ExampleWrapper extends Example {
     const runner = this.block();
     let partial = runner.next();
     await this.child.run();
-    if (!partial.done) { runner.next(); }
+    if (!partial.done) {
+      runner.next();
+    }
   }
 
   async runAsyncGenerator() {
     const runner = this.block();
     let partial = await runner.next();
     await this.child.run();
-    if (!partial.done) { await runner.next(); }
+    if (!partial.done) {
+      await runner.next();
+    }
   }
 
   async run() {

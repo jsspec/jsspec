@@ -23,7 +23,7 @@ class Runner {
     try {
       require(this.file.name);
       await context.runChildren();
-    }catch (error) {
+    } catch (error) {
       context.failed = true;
       context.failure = error;
       context.description = '[Load Error]';
@@ -34,6 +34,5 @@ class Runner {
     return context.failed;
   }
 }
-
 
 module.exports = Runner;

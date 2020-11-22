@@ -11,7 +11,7 @@ const jsSpecCLIOptions = {
   timeout: { alias: 't', type: Number, required: false, default: 200 },
   watch: { alias: 'w', type: Boolean, required: false, default: false },
   bland: { alias: 'b', type: Boolean, required: false, default: false },
-  files: { type: Array, required: false, default: ['spec/**/*.spec.js'] }
+  files: { type: Array, required: false, default: ['spec/**/*.spec.js'] },
 };
 
 class JSSpecOptions {
@@ -19,8 +19,11 @@ class JSSpecOptions {
     this.options = new Options(args, jsSpecCLIOptions, 'files');
     this.settings = this.options.settings;
 
-    if (this.settings.seed) { this.settings.random = true; }
-    else if (this.settings.random) { this.settings.seed = looseSeed(); }
+    if (this.settings.seed) {
+      this.settings.random = true;
+    } else if (this.settings.random) {
+      this.settings.seed = looseSeed();
+    }
 
     this.errors = this.options.errors;
     try {
@@ -29,16 +32,14 @@ class JSSpecOptions {
       this.reporterClass = formatters.documentation;
       this.errors.push(error);
     }
-    this.options.settings.require = this.options.settings.require.filter(
-      requestedModule => {
-        try {
-          require(resolve(requestedModule));
-          return true;
-        } catch (error) {
-          this.errors.push(error);
-        }
+    this.options.settings.require = this.options.settings.require.filter(requestedModule => {
+      try {
+        require(resolve(requestedModule));
+        return true;
+      } catch (error) {
+        this.errors.push(error);
       }
-    );
+    });
   }
 }
 

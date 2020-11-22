@@ -24,15 +24,14 @@ describe('beforeEach', () => {
     try {
       beforeEach('what even is this');
       it(nonExecutor);
-    }catch (error) {
+    } catch (error) {
       it('throws', () => expect(error).to.be.an.instanceOf(TypeError));
     }
   });
 
   describe('calling from within an example', () => {
-    it('throws', () => expect(
-      () => beforeEach('called in executor', nonExecutor)
-    ).to.throw(ReferenceError, 'example block (`beforeEach`) can not be defined inside another'));
+    it('throws', () =>
+      expect(() => beforeEach('called in executor', nonExecutor)).to.throw(ReferenceError, 'example block (`beforeEach`) can not be defined inside another'));
   });
 
   describe('nesting', () => {
@@ -45,8 +44,8 @@ describe('beforeEach', () => {
     });
 
     describe('sibling contexts', () => {
-      it('does not execute the sibling\'s hook', () => expect(trace()).to.eq('d'));
-    })
+      it("does not execute the sibling's hook", () => expect(trace()).to.eq('d'));
+    });
   });
 });
 
@@ -62,8 +61,14 @@ describe('afterEach', () => {
     afterEach(() => trace('h'));
 
     set('expected', '_fgh');
-    it('all are called in order, per example', () => {expected = 'yfgh'; trace('y');});
-    it('all are called in order, per example', () => {expected = 'zfgh'; trace('z');});
+    it('all are called in order, per example', () => {
+      expected = 'yfgh';
+      trace('y');
+    });
+    it('all are called in order, per example', () => {
+      expected = 'zfgh';
+      trace('z');
+    });
   });
 
   describe('calling with no function', () => {
@@ -71,16 +76,15 @@ describe('afterEach', () => {
     try {
       afterEach('what even is this');
       it(noOp);
-    }catch (error) {
+    } catch (error) {
       it('throws', () => expect(error).to.be.an.instanceOf(TypeError));
     }
   });
 
   describe('calling from within an example', () => {
     set('expected', '');
-    it('throws', () => expect(
-      () => afterEach('called in executor', nonExecutor)
-    ).to.throw(ReferenceError, 'example block (`afterEach`) can not be defined inside another'));
+    it('throws', () =>
+      expect(() => afterEach('called in executor', nonExecutor)).to.throw(ReferenceError, 'example block (`afterEach`) can not be defined inside another'));
   });
 
   describe('nesting', () => {
@@ -95,7 +99,7 @@ describe('afterEach', () => {
 
     describe('siblings', () => {
       set('expected', 'il');
-      it('does not execute sibling\'s hook', () => trace('l'));
-    })
+      it("does not execute sibling's hook", () => trace('l'));
+    });
   });
 });
