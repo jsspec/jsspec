@@ -24,9 +24,9 @@
     "pirates": "^4.0.1"
   },
   "devDependencies": {
-    "c8": "^7.1.2",
+    "c8": "^7.3.5",
     "chai": "^4.2.0",
-    "sinon": "^9.0.2",
+    "sinon": "^9.2.1",
     "sinon-chai": "^3.5.0",
     "prettier": "^2.2.0"
   },
