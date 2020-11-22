@@ -12,8 +12,8 @@ let spawned = cp.spawnSync(
 let result = spawned.stdout.toString();
 
 describe('failures', () => {
-  set('failures', 14);
-  set('contextLevelFailures', 4);
+  set('failures', 15);
+  set('contextLevelFailures', 5);
   set('total', () => failures - contextLevelFailures);
 
   it('exits with a non-zero result', () => {
@@ -22,6 +22,8 @@ describe('failures', () => {
 
   it('fails as expected', () => {
     expect(result).to.include(`${total} examples, ${failures} failures`);
+    // assignment to global
+    expect(result).to.match(/'clearInterval' is an existing global variable./);
     // timeout
     expect(result).to.match(/\d+\) timeout times out/);
     expect(result).to.match(/example timeout \(20ms\) exceeded/);

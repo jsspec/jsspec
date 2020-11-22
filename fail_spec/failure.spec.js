@@ -1,5 +1,3 @@
-'use strict';
-
 const { noOp, nonExecutor: fail } = require('../spec/spec_helper');
 
 describe('timeout', { timeout: 20 }, () => {

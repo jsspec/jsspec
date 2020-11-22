@@ -5,7 +5,8 @@ let computedValues = new Map();
 let globalisedKeys = new Set();
 
 const globaliseKey = key => {
-  if (globalisedKeys.has(key) || key in global) return;
+  if (!globalisedKeys.has(key) && key in global) throw ReferenceError(`'${key}' is an existing global variable. 'set' can not be used on it.`);
+  if (globalisedKeys.has(key)) return;
 
   globalisedKeys.add(key);
   if (!key) return;

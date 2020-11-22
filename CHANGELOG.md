@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Fail on attempt to use 'set' on existing global variable
+
 ## 0.2.4
 
 - Add handling for non-error throw handling
