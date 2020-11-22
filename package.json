@@ -19,7 +19,7 @@
   ],
   "dependencies": {
     "@jsspec/cli-options": "0.0.8",
-    "@jsspec/format": ">=0.1.5",
+    "@jsspec/format": "^0.1.6",
     "glob": "^7.1.6",
     "pirates": "^4.0.1"
   },
