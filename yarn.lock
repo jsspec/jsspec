@@ -17,12 +17,12 @@
   resolved "https://registry.yarnpkg.com/@jsspec/cli-options/-/cli-options-0.0.8.tgz#ac0d0614c3e835761ee46fdc9d29b4682a234003"
   integrity sha512-rC36wLsZIgcorEiXlvhSlA2nt4VhLMHd6MvUnhi8+9WQje5z75/c8FOBcBd9uwUTKhBXqhk1jeCRWuGaKXv+8Q==
 
-"@jsspec/format@>=0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@jsspec/format/-/format-0.1.5.tgz#5ac64f3556de0a99ed29aafac78d7637fa37a2cd"
-  integrity sha512-Yf06Wv27tQGOCZJMaGSN7sEkPZTlH8SKcE3WfhQlSP9C0W4x5HSzm4LXYNXlPJOgAFGOY6U1y1oK+lPijQapVg==
+"@jsspec/format@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@jsspec/format/-/format-0.1.6.tgz#3c3e7eac20eaad07d54a7daae1a0a5bd57d2b287"
+  integrity sha512-m1CuFXnksBTZtk4na+a6DpYkAiMH0lm+QulfvX54bUV9AaY+ftnuENBzd63PvMg9ziNtKJ58MwFDyRaAEspYwg==
   dependencies:
-    diff "^4.0.2"
+    diff "^5.0.0"
 
 "@sinonjs/commons@^1", "@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0", "@sinonjs/commons@^1.8.1":
   version "1.8.1"
@@ -189,6 +189,11 @@ diff@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
+
+diff@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-5.0.0.tgz#7ed6ad76d859d030787ec35855f5b1daf31d852b"
+  integrity sha512-/VTCrvm5Z0JGty/BWHljh+BAiw3IK+2j87NGMu8Nwc/f48WoDAC395uomO9ZD117ZOBaHmkX1oyLvkVM/aIT3w==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
