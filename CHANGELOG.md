@@ -1,8 +1,12 @@
+### 0.3.1
+
+- Update deps (apply fix from `format`)
+
 ## 0.3.0
 
 - Fail on attempt to use 'set' on existing global variable
 
-## 0.2.4
+### 0.2.4
 
 - Add handling for non-error throw handling
 
@@ -20,11 +24,11 @@
 
 - Add changes for reporting improvements
 
-### 0.2.0
+## 0.2.0
 
 - Add aroundEach hook
 
-### 0.1.0
+## 0.1.0
 
 - Add watch runner
   - this changes the message signature for the formatter

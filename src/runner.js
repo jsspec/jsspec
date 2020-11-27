@@ -29,7 +29,7 @@ class Runner {
       context.description = '[Load Error]';
       emitter.emit('contextLevelFailure', context);
     }
-    emitter.emit('fileEnd', key, this.file.originalName);
+    emitter.emit('fileEnd', key, this.file.name);
     context.reset();
     return context.failed;
   }

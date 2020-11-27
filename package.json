@@ -1,6 +1,6 @@
 {
   "name": "@jsspec/jsspec",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "JSSpec - contextualised test runner for javascript",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   ],
   "dependencies": {
     "@jsspec/cli-options": "0.0.8",
-    "@jsspec/format": "^0.1.6",
+    "@jsspec/format": "^0.1.7",
     "glob": "^7.1.6",
     "pirates": "^4.0.1"
   },
