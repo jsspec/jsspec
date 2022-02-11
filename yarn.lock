@@ -17,10 +17,10 @@
   resolved "https://registry.yarnpkg.com/@jsspec/cli-options/-/cli-options-0.0.8.tgz#ac0d0614c3e835761ee46fdc9d29b4682a234003"
   integrity sha512-rC36wLsZIgcorEiXlvhSlA2nt4VhLMHd6MvUnhi8+9WQje5z75/c8FOBcBd9uwUTKhBXqhk1jeCRWuGaKXv+8Q==
 
-"@jsspec/format@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@jsspec/format/-/format-0.1.6.tgz#3c3e7eac20eaad07d54a7daae1a0a5bd57d2b287"
-  integrity sha512-m1CuFXnksBTZtk4na+a6DpYkAiMH0lm+QulfvX54bUV9AaY+ftnuENBzd63PvMg9ziNtKJ58MwFDyRaAEspYwg==
+"@jsspec/format@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@jsspec/format/-/format-0.1.7.tgz#25b8802688917960b235e2eda386675bb6006c25"
+  integrity sha512-+PrPyvfAvwzVrqNf7/+Jkbxkq3jME+2KhhvK0Nq9Lq82xGpF7J3SrnMqVDW0SL1ZHtdyYwjiP0gjDwrc1RNJgQ==
   dependencies:
     diff "^5.0.0"
 
@@ -417,9 +417,9 @@ path-to-regexp@^1.7.0:
     isarray "0.0.1"
 
 pathval@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.0.tgz#b942e6d4bde653005ef6b71361def8727d0645e0"
-  integrity sha1-uULm1L3mUwBe9rcTYd74cn0GReA=
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.1.tgz#8534e77a77ce7ac5a2512ea21e0fdb8fcf6c3d8d"
+  integrity sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==
 
 pirates@^4.0.1:
   version "4.0.1"
